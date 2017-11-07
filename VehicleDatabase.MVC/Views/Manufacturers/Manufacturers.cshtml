@@ -1,0 +1,77 @@
+﻿@model PagedList.IPagedList<VehicleDatabase.MVC.Models.VehicleMakeViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Manufacturers";
+}
+
+<h2>Manufacturers</h2>
+
+<div>
+    <div class="row">
+        <div class="col-xs-2">
+            <label>Search:</label>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+        @using (Html.BeginForm())
+        {
+            <div class="col-xs-2">
+                @Html.TextBox("searchString", null, new { @class = "form-control" })
+            </div>
+            <div class="col-xs-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        }
+        <button type="button" class="btn btn-primary add-manufacturer pull-right">Add manufacturer</button>
+    </div>
+</div>
+<div>
+    <table class="table table-striped">
+        <tr>
+            <th>
+                @Html.ActionLink("Name", "Manufacturers", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString })
+            </th>
+            <th>
+                @Html.ActionLink("Abbreviation", "Manufacturers", new { sortOrder = ViewBag.AbrvSortParm, searchString = ViewBag.SearchString })
+            </th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abrv)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm edit-manufacturer" data-manufacturer-id="@item.Id">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm delete-manufacturer" data-manufacturer-id="@item.Id">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </table>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Manufacturers", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString }))
+</div>
+
+@*add*@
+
+<div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+</div><!-- /.modal -->
+
+@*delete*@
+
+<div id="delete-manufacturer-modal" class="modal fade" tabindex="-1" role="dialog">
+</div><!-- /.modal -->

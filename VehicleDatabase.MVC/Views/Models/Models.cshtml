@@ -1,0 +1,87 @@
+﻿@model VehicleDatabase.MVC.Models.SearchVehicleModelViewModel
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Models";
+}
+
+<h2>Models</h2>
+<div>
+    <div class="row">
+        <div class="col-xs-2">
+            <label>Search by model: </label>
+        </div>
+        <div class="col-xs-2">
+            <label>Search by manufaturer: </label>
+        </div>
+    </div>
+    <div class="row">
+        @using (Html.BeginForm())
+            {
+            <div class="col-xs-2">
+                @Html.TextBox("searchString", null, new { @class = "form-control" })
+            </div>
+            <div class="col-xs-2">
+                @Html.DropDownListFor(m => m.MakeId, new SelectList(Model.AllMakes, "Id", "Name", Model.MakeId), "All manufacturers", new { @class = "form-control" })
+            </div>
+            <div class="col-xs-2">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        }
+        <button type="button" class="btn btn-primary add-model pull-right">Add model</button>
+    </div>
+
+    <table class="table table-striped">
+        <tr>
+            <th>
+                <label>Manufacturer</label>
+            </th>
+            <th>
+                @Html.ActionLink("Name", "Models", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
+            </th>
+            <th>
+                @Html.ActionLink("Abbreviation", "Models", new { sortOrder = ViewBag.AbrvSortParm, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
+            </th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var item in Model.Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Make.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abrv)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm edit-model" data-model-id="@item.Id">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm delete-model" data-model-id="@item.Id">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </td>
+
+            </tr>
+        }
+    </table>
+
+    Page @(Model.Model.PageCount < Model.Model.PageNumber ? 0 : Model.Model.PageNumber) of @Model.Model.PageCount
+    @Html.PagedListPager(Model.Model, page => Url.Action("Models", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId }))
+</div>
+
+
+@*add*@
+
+<div id="add-vehicle-model" class="modal fade" tabindex="-1" role="dialog">
+</div><!-- /.modal -->
+
+@*delete*@
+
+<div id="delete-vehicle-model-modal" class="modal fade" tabindex="-1" role="dialog">
+</div><!-- /.modal -->

@@ -1,0 +1,45 @@
+﻿@model VehicleDatabase.MVC.Models.VehicleModelViewModel
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+            @using (Ajax.BeginForm("AddVehicleModel", "Models", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "add-vehicle-model", OnSuccess = "jqEditFormCompleted" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @{ var editing = Model != null && Model.Id != null && Model.Id != Guid.Empty; }
+                    <h4 class="modal-title">@(editing ? "Edit Model" : "Add Model")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Manufacturer</label>
+                        @Html.DropDownListFor(m => m.MakeId, new SelectList(Model.AllMakes, "Id", "Name"), "Select manufacturer", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Abrv)
+                        @Html.TextBoxFor(m => m.Abrv, new { @class = "form-control" })
+                    </div>
+                    @Html.HiddenFor(m => m.Id, new { @class = "edit-model-id" })
+                </div>
+                <div>
+                    @Html.ValidationSummary(false)
+                    <input type="hidden" id="form-state" value="@ViewData.ModelState.IsValid.ToString().ToLowerInvariant()" />
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Save">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+<script>
+    function jqEditFormCompleted(response) {
+        if ($("#form-state").val() == "true") {
+            window.location.href = "@Url.Action("Models", "Models")";
+        }
+    }
+</script>
