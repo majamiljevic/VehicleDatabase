@@ -12,9 +12,8 @@ namespace VehicleDatabase.MVC.Controllers
 {
     public class ModelsController : Controller
     {
-
         private IMapper mapper;
-        private VehicleService service;
+        private IVehicleService service;
 
         public ModelsController()
         {
@@ -39,9 +38,8 @@ namespace VehicleDatabase.MVC.Controllers
 
             var models = this.service.GetModels(searchString, sortOrder, MakeId, pageNumber, pageSize);
             var transformedModels = this.mapper.Map<IEnumerable<VehicleModel>, IEnumerable<VehicleModelViewModel>>(models);
-            var totalModelCount = this.service.GetModelsCount(searchString, MakeId);
 
-            var pagedModel = new StaticPagedList<VehicleModelViewModel>(transformedModels, pageNumber, pageSize, totalModelCount);
+            var pagedModel = new StaticPagedList<VehicleModelViewModel>(transformedModels, models.GetMetaData());
 
             var searchModel = new SearchVehicleModelViewModel();
 
@@ -51,6 +49,7 @@ namespace VehicleDatabase.MVC.Controllers
             return View(searchModel);
         }
 
+        //dodavanje modela
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddVehicleModel(VehicleModelViewModel vehicleModel)
@@ -60,11 +59,32 @@ namespace VehicleDatabase.MVC.Controllers
                 var transformedVehicleModel = this.mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
                 if (vehicleModel.Id == null || vehicleModel.Id == Guid.Empty)
                 {
-                    this.service.AddModel(transformedVehicleModel);
+                    var result = this.service.AddModel(transformedVehicleModel);
+                    if (result == 0)
+                    {
+                        ModelState.AddModelError("ValidationMessage", "Unable to save vehicle model!");
+                    }
                 }
-                else
+            }
+            vehicleModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            return PartialView("_AddVehicleModelModal", vehicleModel);
+        }
+
+        //editiranje modela
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditVehicleModel(VehicleModelViewModel vehicleModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var transformedVehicleModel = this.mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
+                if (vehicleModel.Id != null || vehicleModel.Id != Guid.Empty)
                 {
-                    this.service.EditModel(transformedVehicleModel);
+                    var result = this.service.EditModel(transformedVehicleModel);
+                    if (result == 0)
+                    {
+                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
+                    }
                 }
             }
             vehicleModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
@@ -76,10 +96,9 @@ namespace VehicleDatabase.MVC.Controllers
             var model = new VehicleModelViewModel();
             model.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             var makesCount = model.AllMakes.Count();
-
             if (makesCount == 0)
             {
-                return PartialView("_AddModelErrorModal");
+                return PartialView("_ErrorModal", "Add at least one manufacturer before adding models!");
             }
             return PartialView("_AddVehicleModelModal", model);
         }
@@ -88,6 +107,10 @@ namespace VehicleDatabase.MVC.Controllers
         public ActionResult EditVehicleModel(Guid vehicleModelId)
         {
             var model = this.service.FindModelById(vehicleModelId);
+            if (model == null)
+            {
+                return PartialView("_ErrorModal", "Something went wrong!");
+            }
             var transformedModel = this.mapper.Map<VehicleModel, VehicleModelViewModel>(model);
             transformedModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", transformedModel);
@@ -96,8 +119,12 @@ namespace VehicleDatabase.MVC.Controllers
         //brisanje
         public ActionResult DeleteVehicleModelConfirmed(Guid vehicleModelId)
         {
-            this.service.DeleteModel(vehicleModelId);
-            return RedirectToAction("Models");
+            var result = this.service.DeleteModel(vehicleModelId);
+            if (result == 0)
+            {
+                return PartialView("_ErrorModal", "Unable to delete vehicle model!");
+            }
+            return PartialView("_DeleteVehicleModel");
         }
 
         public ActionResult DeleteVehicleModel(Guid vehicleModelId)

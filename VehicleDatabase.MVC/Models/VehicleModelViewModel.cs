@@ -14,7 +14,6 @@ namespace VehicleDatabase.MVC.Models
         [Required(ErrorMessage = "Manufacturer is required")]
         public Guid MakeId { get; set; }
 
-        
         public VehicleMakeViewModel Make { get; set; }
 
         [Required(ErrorMessage = "Name is required")]

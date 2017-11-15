@@ -6,7 +6,6 @@
     <title>@ViewBag.Title - Vehicle database</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -22,8 +21,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Models" ? "active" : "")">@Html.ActionLink("Models", "Models", "Models")</li>
-                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Manufacturers" ? "active" : "")">@Html.ActionLink("Manufacturers", "Manufacturers", "Manufacturers")</li>
-                    
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Manufacturers" ? "active" : "")">@Html.ActionLink("Manufacturers", "Manufacturers", "Manufacturers")</li>                    
                 </ul>
             </div>
         </div>
@@ -41,7 +39,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/manufacturers")
-    @Scripts.Render("~/bundles/models")
-    <
+    @Scripts.Render("~/bundles/models")    
 </body>
 </html>

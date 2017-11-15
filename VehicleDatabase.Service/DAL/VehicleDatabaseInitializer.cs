@@ -4,7 +4,7 @@ using System.Data.Entity;
 
 namespace VehicleDatabase.Service.DAL
 {
-    public class VehicleDatabaseInitializer : DropCreateDatabaseAlways<VehicleDatabaseDBContext>
+    public class VehicleDatabaseInitializer : DropCreateDatabaseIfModelChanges<VehicleDatabaseDBContext>
     {
         protected override void Seed(VehicleDatabaseDBContext context)
         {

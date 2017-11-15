@@ -9,6 +9,7 @@
         <div class="modal-body">
             <p>This record will be <strong>deleted</strong> and cannot be recovered.</p>
         </div>
+        <input type="hidden" id="form-state" value="@ViewData.ModelState.IsValid.ToString().ToLowerInvariant()"/>
         <div class="modal-footer">
             <button type="button" class="btn btn-success delete-manufacturer-confirmed">Delete</button>
             <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>

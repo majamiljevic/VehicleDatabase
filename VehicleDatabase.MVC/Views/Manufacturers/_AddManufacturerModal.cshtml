@@ -1,14 +1,14 @@
 ﻿@model VehicleDatabase.MVC.Models.VehicleMakeViewModel
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-            @using (Ajax.BeginForm("AddManufacturer", "Manufacturers", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "modal-container", OnSuccess = "jqEditFormCompleted" }))
+        @{ var editing = Model != null && Model.Id != null && Model.Id != Guid.Empty; }
+        @using (Ajax.BeginForm(editing ? "EditManufacturer" : "AddManufacturer", "Manufacturers", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "modal-container", OnSuccess = "jqEditFormCompleted" }))
             {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    @{ var editing = Model != null && Model.Id != null && Model.Id != Guid.Empty; }
-                    <h4 class="modal-title">@(editing ? "Edit Manufacturer" : "Add Manufacturer")</h4>
-                </div>
+            @Html.AntiForgeryToken()
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">@(editing ? "Edit Manufacturer" : "Add Manufacturer")</h4>
+            </div>
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(m => m.Name)
@@ -28,7 +28,7 @@
                     <input type="submit" class="btn btn-success" value="Save">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
-                        }
+        }
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 

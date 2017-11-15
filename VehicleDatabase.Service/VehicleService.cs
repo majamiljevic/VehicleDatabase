@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using VehicleDatabase.Service.DAL;
+using PagedList;
 
 
 namespace VehicleDatabase.Service
@@ -25,11 +27,18 @@ namespace VehicleDatabase.Service
             }
 
             context.Make.Add(make);
-            return context.SaveChanges();
+            try
+            {
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
 
-        public IEnumerable<VehicleMake> GetMakes(string searchString, string sortOrder, int pageNumber, int pageSize)
+        public IPagedList<VehicleMake> GetMakes(string searchString, string sortOrder, int pageNumber, int pageSize)
         {
             IQueryable<VehicleMake> makes = context.Make;
 
@@ -53,7 +62,7 @@ namespace VehicleDatabase.Service
                     makes = makes.OrderBy(m => m.Name);
                     break;
             }
-            return makes.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            return makes.ToPagedList(pageNumber, pageSize);
         }
 
         public int GetMakesCount(string searchString)
@@ -68,28 +77,34 @@ namespace VehicleDatabase.Service
         public int DeleteMake(Guid manufacturerId)
         {
             VehicleMake make = context.Make.FirstOrDefault(m => m.Id == manufacturerId);
-            context.Make.Remove(make);
-            return context.SaveChanges();
+            try
+            {
+                context.Make.Remove(make);
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public int EditMake(VehicleMake make)
         {
-            var makeToUpdate = context.Make.FirstOrDefault(m => m.Id == make.Id);
-            makeToUpdate.Name = make.Name;
-            makeToUpdate.Abrv = make.Abrv;
-            return context.SaveChanges();
+            context.Entry(make).State = EntityState.Modified;
+            try
+            {
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public VehicleMake FindMakeById(Guid manufacturerId)
         {
             return context.Make.FirstOrDefault(m => m.Id == manufacturerId);
         }
-
-        public bool MakeExists(VehicleMake make)
-        {
-            return context.Make.Any(ma => ma.Name.Equals(make.Name) || ma.Abrv.Equals(make.Abrv));
-        }
-
 
 
 
@@ -98,33 +113,34 @@ namespace VehicleDatabase.Service
         public int AddModel(VehicleModel model)
         {
             context.Model.Add(model);
-            return context.SaveChanges();
+            try
+            {
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public IEnumerable<VehicleMake> GetAllMakes()
         {
-            return context.Make.ToList();
+            return context.Make.OrderBy(m => m.Name).ToList();
         }
 
         //dohvaćanje modela
-        public IEnumerable<VehicleModel> GetModels(string searchString, string sortOrder, Guid? MakeId, int pageNumber, int pageSize)
+        public IPagedList<VehicleModel> GetModels(string searchString, string sortOrder, Guid? MakeId, int pageNumber, int pageSize)
         {
             IQueryable<VehicleModel> models = context.Model;
 
             if (MakeId != null && MakeId != Guid.Empty)
             {
-                models = context.Model.Where(m => m.MakeId == MakeId);
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    models = models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString));
-                }
+                models = models.Where(m => m.MakeId == MakeId);
             }
-            else
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    models = models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString));
-                }
+                models = models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString));
             }
 
             switch (sortOrder)
@@ -142,26 +158,21 @@ namespace VehicleDatabase.Service
                     models = models.OrderBy(m => m.Name);
                     break;
             }
-            return models.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            return models.ToPagedList(pageNumber, pageSize);
         }
 
         public int GetModelsCount(string searchString, Guid? MakeId)
         {
             IQueryable<VehicleModel> models = context.Model;
+
             if (MakeId != null && MakeId != Guid.Empty)
             {
-                models = context.Model.Where(m => m.MakeId == MakeId);
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    return models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString)).Count();
-                }
+                models = models.Where(m => m.MakeId == MakeId);
             }
-            else
+
+            if (!String.IsNullOrEmpty(searchString))
             {
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    return models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString)).Count();
-                }
+                return models.Where(s => s.Name.Contains(searchString) || s.Abrv.Contains(searchString)).Count();
             }
             return models.Count();
         }
@@ -169,11 +180,15 @@ namespace VehicleDatabase.Service
         //update
         public int EditModel(VehicleModel model)
         {
-            var modelToUpdate = context.Model.FirstOrDefault(m => m.Id == model.Id);
-            modelToUpdate.MakeId = model.MakeId;
-            modelToUpdate.Name = model.Name;
-            modelToUpdate.Abrv = model.Abrv;
-            return context.SaveChanges();
+            context.Entry(model).State = EntityState.Modified;
+            try
+            {
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public VehicleModel FindModelById(Guid vehicleModelId)
@@ -185,8 +200,16 @@ namespace VehicleDatabase.Service
         public int DeleteModel(Guid vehicleModelId)
         {
             VehicleModel model = context.Model.FirstOrDefault(m => m.Id == vehicleModelId);
-            context.Model.Remove(model);
-            return context.SaveChanges();
+
+            try
+            {
+                context.Model.Remove(model);
+                return context.SaveChanges();
+            }
+            catch
+            {
+                return 0;
+            }
         }
     }
 }

@@ -229,7 +229,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Models\_AddVehicleModelModal.cshtml" />
     <Content Include="Views\Models\Models.cshtml" />
@@ -237,7 +236,7 @@
     <Content Include="Views\Manufacturers\Manufacturers.cshtml" />
     <Content Include="Views\Manufacturers\_AddManufacturerModal.cshtml" />
     <Content Include="Views\Manufacturers\_DeleteManufacturer.cshtml" />
-    <Content Include="Views\Models\_AddModelErrorModal.cshtml" />
+    <Content Include="Views\Shared\_ErrorModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

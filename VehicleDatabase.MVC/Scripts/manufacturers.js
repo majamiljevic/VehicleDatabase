@@ -22,8 +22,6 @@ $('#modal-container').on('hidden.bs.modal', function () {
 });
 
 
-
-
 //delete
 $('body').on('click', '.delete-manufacturer', function (e) {
     e.preventDefault();
@@ -49,7 +47,6 @@ $('#delete-manufacturer-modal').on('hidden.bs.modal', function () {
     $(this).removeData('bs.modal');
 });
 
-
 $("body").on("click", ".delete-manufacturer-confirmed", function () {
     var manufacturerId = $('.delete-manufacturer-id').val();
     $.ajax({
@@ -57,11 +54,13 @@ $("body").on("click", ".delete-manufacturer-confirmed", function () {
         data: { manufacturerId: manufacturerId },
         dataType: "html",
         success: function (data) {
-            location.reload();
+            $('#delete-manufacturer-modal').html(data);
+            if ($("#form-state").val() == 'true') {
+                location.reload();
+            }
         }
     });
 });
-
 
 
 //edit
@@ -88,4 +87,6 @@ $('body').on('click', '.modal-close-btn', function () {
 $('#modal-container').on('hidden.bs.modal', function () {
     $(this).removeData('bs.modal');
 });
+
+
 

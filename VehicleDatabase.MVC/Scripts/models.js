@@ -1,6 +1,4 @@
 ﻿//add
-
-
 $('body').on('click', '.add-model', function (e) {
     e.preventDefault();
     $(this).attr('data-target', '#add-vehicle-model');
@@ -24,12 +22,7 @@ $('#add-vehicle-model').on('hidden.bs.modal', function () {
 });
 
 
-
-
-
 //edit
-
-
 $('body').on('click', '.edit-model', function (e) {
     e.preventDefault();
     $(this).attr('data-target', '#add-vehicle-model');
@@ -55,11 +48,7 @@ $('#add-vehicle-model').on('hidden.bs.modal', function () {
 });
 
 
-
-
 //delete
-
-
 $('body').on('click', '.delete-model', function (e) {
     e.preventDefault();
     $(this).attr('data-target', '#delete-vehicle-model-modal');
@@ -91,7 +80,10 @@ $("body").on("click", ".delete-vehicle-model-confirmed", function () {
         data: { vehicleModelId: vehicleModelId },
         dataType: "html",
         success: function (data) {
-            location.reload();
+            $('#delete-vehicle-model-modal').html(data);
+            if ($("#form-state").val() == "true") {
+                location.reload();
+            }
         }
     });
 });

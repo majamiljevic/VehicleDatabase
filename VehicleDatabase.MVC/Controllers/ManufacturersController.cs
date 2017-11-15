@@ -14,11 +14,15 @@ namespace VehicleDatabase.MVC.Controllers
     public class ManufacturersController : Controller
     {
         private IMapper mapper;
-        private VehicleService service;
+        private IVehicleService service;
 
         public ManufacturersController()
         {
-            var config = new MapperConfiguration(cfg => { cfg.CreateMap<VehicleMake, VehicleMakeViewModel>(); cfg.CreateMap<VehicleMakeViewModel, VehicleMake>(); });
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<VehicleMake, VehicleMakeViewModel>();
+                cfg.CreateMap<VehicleMakeViewModel, VehicleMake>();
+            });
             this.mapper = config.CreateMapper();
 
             this.service = new VehicleService();
@@ -31,17 +35,18 @@ namespace VehicleDatabase.MVC.Controllers
             ViewBag.AbrvSortParm = sortOrder == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.SearchString = searchString;
 
+            
+
             int pageSize = 10;
-            int pageNumber = (page ?? 1);           
+            int pageNumber = (page ?? 1);
 
             var makes = this.service.GetMakes(searchString, sortOrder, pageNumber, pageSize);
             var transformedMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(makes);
-            var totalMakeCount = this.service.GetMakesCount(searchString);
 
-            return View(new StaticPagedList<VehicleMakeViewModel>(transformedMakes, pageNumber, pageSize, totalMakeCount));
+            return View(new StaticPagedList<VehicleMakeViewModel>(transformedMakes, makes.GetMetaData()));
         }
 
-        // dodavanje proizvođača
+        //dodavanje proizvođača
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddManufacturer(VehicleMakeViewModel make)
@@ -49,22 +54,33 @@ namespace VehicleDatabase.MVC.Controllers
             if (ModelState.IsValid)
             {
                 var transformedMake = this.mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
-                var makeExisits = this.service.MakeExists(transformedMake);
                 if (make.Id == null || make.Id == Guid.Empty)
                 {
-                    if (makeExisits)
+                    var result = this.service.AddMake(transformedMake);
+                    if (result == 0)
                     {
-                        ModelState.AddModelError("CustomError", "Manufacturer with that name/abbreviation already exists");
-                        return PartialView("_AddManufacturerModal", make);
-                    }
-                    else
-                    {
-                        this.service.AddMake(transformedMake);
+                        ModelState.AddModelError("ValidationMessage", "Unable to save manufacturer!");
                     }
                 }
-                else
+            }
+            return PartialView("_AddManufacturerModal", make);
+        }
+
+        //editiranje proizvođača
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditManufacturer(VehicleMakeViewModel make)
+        {
+            if (ModelState.IsValid)
+            {
+                var transformedMake = this.mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
+                if (make.Id != null || make.Id != Guid.Empty)
                 {
-                    this.service.EditMake(transformedMake);
+                    var result = this.service.EditMake(transformedMake);
+                    if (result == 0)
+                    {
+                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
+                    }
                 }
             }
             return PartialView("_AddManufacturerModal", make);
@@ -78,8 +94,13 @@ namespace VehicleDatabase.MVC.Controllers
         //brisanje
         public ActionResult DeleteManufacturerConfirmed(Guid manufacturerId)
         {
-            this.service.DeleteMake(manufacturerId);
-            return RedirectToAction("Manufacturers");
+            var result = this.service.DeleteMake(manufacturerId);
+            if (result == 0)
+            {
+                return PartialView("_ErrorModal", "Unable to delete manufacturer!");
+            }
+
+            return PartialView("_DeleteManufacturer");
         }
 
         public ActionResult DeleteManufacturer(Guid manufacturerId)
@@ -93,6 +114,11 @@ namespace VehicleDatabase.MVC.Controllers
         public ActionResult EditManufacturer(Guid manufacturerId)
         {
             var model = this.service.FindMakeById(manufacturerId);
+            if (model == null)
+            {
+                return PartialView("_ErrorModal", "Unable to save changes!");
+            }
+
             var transformedModel = this.mapper.Map<VehicleMake, VehicleMakeViewModel>(model);
             return PartialView("_AddManufacturerModal", transformedModel);
         }

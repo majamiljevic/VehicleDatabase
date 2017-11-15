@@ -29,7 +29,6 @@
         }
         <button type="button" class="btn btn-primary add-model pull-right">Add model</button>
     </div>
-
     <table class="table table-striped">
         <tr>
             <th>
@@ -66,11 +65,9 @@
                         <span class="glyphicon glyphicon-trash"></span>
                     </button>
                 </td>
-
             </tr>
         }
     </table>
-
     Page @(Model.Model.PageCount < Model.Model.PageNumber ? 0 : Model.Model.PageNumber) of @Model.Model.PageCount
     @Html.PagedListPager(Model.Model, page => Url.Action("Models", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId }))
 </div>

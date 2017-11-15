@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PagedList;
 
 namespace VehicleDatabase.Service
 {
@@ -14,10 +15,9 @@ namespace VehicleDatabase.Service
         VehicleMake FindMakeById(Guid manufacturerId);
         VehicleModel FindModelById(Guid vehicleModelId);
         IEnumerable<VehicleMake> GetAllMakes();
-        IEnumerable<VehicleMake> GetMakes(string searchString, string sortOrder, int pageNumber, int pageSize);
+        IPagedList<VehicleMake> GetMakes(string searchString, string sortOrder, int pageNumber, int pageSize);
         int GetMakesCount(string searchString);
-        IEnumerable<VehicleModel> GetModels(string searchString, string sortOrder, Guid? MakeId, int pageNumber, int pageSize);
+        IPagedList<VehicleModel> GetModels(string searchString, string sortOrder, Guid? MakeId, int pageNumber, int pageSize);
         int GetModelsCount(string searchString, Guid? MakeId);
-        bool MakeExists(VehicleMake make);
     }
 }
