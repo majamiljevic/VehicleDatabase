@@ -19,7 +19,7 @@
         @using (Html.BeginForm())
         {
             <div class="col-xs-2">
-                @Html.TextBox("searchString", null, new { @class = "form-control" })
+                @Html.TextBox("SearchString", null, new { @class = "form-control" })
             </div>
             <div class="col-xs-2">
                 <input type="submit" value="Search" class="btn btn-primary" />
@@ -32,10 +32,10 @@
     <table class="table table-striped">
         <tr>
             <th>
-                @Html.ActionLink("Name", "Manufacturers", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString })
+                @Html.ActionLink("Name", "Manufacturers", new { SortOrder = ViewBag.NameSortParm, SearchString = ViewBag.SearchString })
             </th>
             <th>
-                @Html.ActionLink("Abbreviation", "Manufacturers", new { sortOrder = ViewBag.AbrvSortParm, searchString = ViewBag.SearchString })
+                @Html.ActionLink("Abbreviation", "Manufacturers", new { SortOrder = ViewBag.AbrvSortParm, SearchString = ViewBag.SearchString })
             </th>
             <th>Edit</th>
             <th>Delete</th>
@@ -63,7 +63,7 @@
         }
     </table>
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-    @Html.PagedListPager(Model, page => Url.Action("Manufacturers", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString }))
+    @Html.PagedListPager(Model, Page => Url.Action("Manufacturers", new { Page, SortOrder = ViewBag.CurrentSort, SearchString = ViewBag.SearchString }))
 </div>
 
 @*add*@

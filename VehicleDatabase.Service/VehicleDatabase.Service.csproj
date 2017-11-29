@@ -86,7 +86,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\PagedList.css" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -105,13 +104,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\VehicleDatabaseInitializer.cs" />
-    <Compile Include="IVehicleService.cs" />
+    <Compile Include="Infrastructure\Filtering.cs" />
+    <Compile Include="Infrastructure\IFiltering.cs" />
+    <Compile Include="Infrastructure\IPaging.cs" />
+    <Compile Include="Infrastructure\ISorting.cs" />
+    <Compile Include="Infrastructure\Paging.cs" />
+    <Compile Include="Infrastructure\Sorting.cs" />
+    <Compile Include="IVehicleMakeService.cs" />
+    <Compile Include="IVehicleModelService.cs" />
+    <Compile Include="Models\IVehicleMake.cs" />
+    <Compile Include="Models\IVehicleModel.cs" />
+    <Compile Include="Models\VehicleMake.cs" />
+    <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DAL\VehicleDatabaseDBContext.cs" />
-    <Compile Include="Entities\VehicleMake.cs" />
-    <Compile Include="Entities\VehicleModel.cs" />
-    <Compile Include="VehicleService.cs" />
+    <Compile Include="Entities\VehicleMakeEntity.cs" />
+    <Compile Include="Entities\VehicleModelEntity.cs" />
+    <Compile Include="VehicleModelService.cs" />
+    <Compile Include="VehicleMakeService.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using VehicleDatabase.MVC.Models;
 using VehicleDatabase.Service;
+using VehicleDatabase.Service.Infrastructure;
 using PagedList;
 using AutoMapper;
 
@@ -13,35 +14,22 @@ namespace VehicleDatabase.MVC.Controllers
 {
     public class ManufacturersController : Controller
     {
-        private IMapper mapper;
-        private IVehicleService service;
+        private IVehicleMakeService service;
 
         public ManufacturersController()
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<VehicleMake, VehicleMakeViewModel>();
-                cfg.CreateMap<VehicleMakeViewModel, VehicleMake>();
-            });
-            this.mapper = config.CreateMapper();
-
-            this.service = new VehicleService();
+            this.service = new VehicleMakeService();
         }
 
-        public ActionResult Manufacturers(string searchString, string sortOrder, int? page)
+        public ActionResult Manufacturers(Filtering filtering, Sorting sorting, Paging paging)
         {
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sortOrder == "abrv" ? "abrv_desc" : "abrv";
-            ViewBag.SearchString = searchString;
+            ViewBag.CurrentSort = sorting.SortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sorting.SortOrder) ? "name_desc" : "";
+            ViewBag.AbrvSortParm = sorting.SortOrder == "abrv" ? "abrv_desc" : "abrv";
+            ViewBag.SearchString = filtering.SearchString;
 
-            
-
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-
-            var makes = this.service.GetMakes(searchString, sortOrder, pageNumber, pageSize);
-            var transformedMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(makes);
+            var makes = this.service.GetMakes(filtering, sorting, paging);
+            var transformedMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(makes);
 
             return View(new StaticPagedList<VehicleMakeViewModel>(transformedMakes, makes.GetMetaData()));
         }
@@ -53,7 +41,7 @@ namespace VehicleDatabase.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var transformedMake = this.mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
+                var transformedMake = Mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
                 if (make.Id == null || make.Id == Guid.Empty)
                 {
                     var result = this.service.AddMake(transformedMake);
@@ -73,7 +61,7 @@ namespace VehicleDatabase.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var transformedMake = this.mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
+                var transformedMake = Mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
                 if (make.Id != null || make.Id != Guid.Empty)
                 {
                     var result = this.service.EditMake(transformedMake);
@@ -119,7 +107,7 @@ namespace VehicleDatabase.MVC.Controllers
                 return PartialView("_ErrorModal", "Unable to save changes!");
             }
 
-            var transformedModel = this.mapper.Map<VehicleMake, VehicleMakeViewModel>(model);
+            var transformedModel = Mapper.Map<IVehicleMake, VehicleMakeViewModel>(model);
             return PartialView("_AddManufacturerModal", transformedModel);
         }
     }

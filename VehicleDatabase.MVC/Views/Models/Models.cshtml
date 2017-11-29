@@ -18,7 +18,7 @@
         @using (Html.BeginForm())
             {
             <div class="col-xs-2">
-                @Html.TextBox("searchString", null, new { @class = "form-control" })
+                @Html.TextBox("SearchString", null, new { @class = "form-control" })
             </div>
             <div class="col-xs-2">
                 @Html.DropDownListFor(m => m.MakeId, new SelectList(Model.AllMakes, "Id", "Name", Model.MakeId), "All manufacturers", new { @class = "form-control" })
@@ -35,10 +35,10 @@
                 <label>Manufacturer</label>
             </th>
             <th>
-                @Html.ActionLink("Name", "Models", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
+                @Html.ActionLink("Name", "Models", new { SortOrder = ViewBag.NameSortParm, SearchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
             </th>
             <th>
-                @Html.ActionLink("Abbreviation", "Models", new { sortOrder = ViewBag.AbrvSortParm, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
+                @Html.ActionLink("Abbreviation", "Models", new { SortOrder = ViewBag.AbrvSortParm, SearchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId })
             </th>
             <th>Edit</th>
             <th>Delete</th>
@@ -69,7 +69,7 @@
         }
     </table>
     Page @(Model.Model.PageCount < Model.Model.PageNumber ? 0 : Model.Model.PageNumber) of @Model.Model.PageCount
-    @Html.PagedListPager(Model.Model, page => Url.Action("Models", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId }))
+    @Html.PagedListPager(Model.Model, Page => Url.Action("Models", new { Page, SortOrder = ViewBag.CurrentSort, SearchString = ViewBag.SearchString, MakeId = ViewBag.ManufacturerId }))
 </div>
 
 

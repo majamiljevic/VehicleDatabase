@@ -8,8 +8,8 @@ namespace VehicleDatabase.Service.DAL
 {
     public class VehicleDatabaseDBContext : DbContext
     {
-        public DbSet<VehicleMake> Make { get; set; }
-        public DbSet<VehicleModel> Model { get; set; }
+        public DbSet<VehicleMakeEntity> Make { get; set; }
+        public DbSet<VehicleModelEntity> Model { get; set; }
 
         public VehicleDatabaseDBContext() : base("name=VehicleDBConnectionString")
         {

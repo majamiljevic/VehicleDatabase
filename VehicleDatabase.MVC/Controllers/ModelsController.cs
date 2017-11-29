@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using VehicleDatabase.MVC.Models;
 using VehicleDatabase.Service;
+using VehicleDatabase.Service.Infrastructure;
 using PagedList;
 using AutoMapper;
 
@@ -12,38 +12,31 @@ namespace VehicleDatabase.MVC.Controllers
 {
     public class ModelsController : Controller
     {
-        private IMapper mapper;
-        private IVehicleService service;
+        private VehicleModelService service;
 
         public ModelsController()
         {
-            var config = new MapperConfiguration(cfg => { cfg.CreateMap<VehicleModel, VehicleModelViewModel>(); cfg.CreateMap<VehicleModelViewModel, VehicleModel>(); cfg.CreateMap<VehicleMake, VehicleMakeViewModel>(); cfg.CreateMap<VehicleMakeViewModel, VehicleMake>(); });
-            this.mapper = config.CreateMapper();
-
-            this.service = new VehicleService();
+            this.service = new VehicleModelService();
         }
 
 
         // GET: Models
-        public ActionResult Models(string searchString, string sortOrder, Guid? MakeId, int? page)
-        {
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sortOrder == "abrv" ? "abrv_desc" : "abrv";
-            ViewBag.SearchString = searchString;
-            ViewBag.ManufacturerId = MakeId;
+        public ActionResult Models(Filtering filtering, Sorting sorting, Paging paging)
+        {            
+            ViewBag.CurrentSort = sorting.SortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sorting.SortOrder) ? "name_desc" : "";
+            ViewBag.AbrvSortParm = sorting.SortOrder == "abrv" ? "abrv_desc" : "abrv";
+            ViewBag.SearchString = filtering.SearchString;
+            ViewBag.ManufacturerId = filtering.MakeId;
 
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-
-            var models = this.service.GetModels(searchString, sortOrder, MakeId, pageNumber, pageSize);
-            var transformedModels = this.mapper.Map<IEnumerable<VehicleModel>, IEnumerable<VehicleModelViewModel>>(models);
+            var models = this.service.GetModels(filtering, sorting, paging);
+            var transformedModels = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<VehicleModelViewModel>>(models);
 
             var pagedModel = new StaticPagedList<VehicleModelViewModel>(transformedModels, models.GetMetaData());
 
             var searchModel = new SearchVehicleModelViewModel();
 
-            searchModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            searchModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             searchModel.Model = pagedModel;
 
             return View(searchModel);
@@ -56,7 +49,7 @@ namespace VehicleDatabase.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var transformedVehicleModel = this.mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
+                var transformedVehicleModel = Mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
                 if (vehicleModel.Id == null || vehicleModel.Id == Guid.Empty)
                 {
                     var result = this.service.AddModel(transformedVehicleModel);
@@ -66,7 +59,7 @@ namespace VehicleDatabase.MVC.Controllers
                     }
                 }
             }
-            vehicleModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            vehicleModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", vehicleModel);
         }
 
@@ -77,7 +70,7 @@ namespace VehicleDatabase.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var transformedVehicleModel = this.mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
+                var transformedVehicleModel = Mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
                 if (vehicleModel.Id != null || vehicleModel.Id != Guid.Empty)
                 {
                     var result = this.service.EditModel(transformedVehicleModel);
@@ -87,14 +80,14 @@ namespace VehicleDatabase.MVC.Controllers
                     }
                 }
             }
-            vehicleModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            vehicleModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", vehicleModel);
         }
 
         public ActionResult AddVehicleModel()
         {
             var model = new VehicleModelViewModel();
-            model.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            model.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             var makesCount = model.AllMakes.Count();
             if (makesCount == 0)
             {
@@ -109,10 +102,10 @@ namespace VehicleDatabase.MVC.Controllers
             var model = this.service.FindModelById(vehicleModelId);
             if (model == null)
             {
-                return PartialView("_ErrorModal", "Something went wrong!");
+                return PartialView("_ErrorModal", "Unable to save changes!");
             }
-            var transformedModel = this.mapper.Map<VehicleModel, VehicleModelViewModel>(model);
-            transformedModel.AllMakes = this.mapper.Map<IEnumerable<VehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            var transformedModel = Mapper.Map<IVehicleModel, VehicleModelViewModel>(model);
+            transformedModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", transformedModel);
         }
 
