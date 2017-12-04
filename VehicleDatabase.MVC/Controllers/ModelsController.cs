@@ -12,7 +12,7 @@ namespace VehicleDatabase.MVC.Controllers
 {
     public class ModelsController : Controller
     {
-        private VehicleModelService service;
+        private IVehicleModelService service;
 
         public ModelsController()
         {
@@ -21,13 +21,21 @@ namespace VehicleDatabase.MVC.Controllers
 
 
         // GET: Models
-        public ActionResult Models(Filtering filtering, Sorting sorting, Paging paging)
+        public ActionResult Models(string SearchString, string SortOrder, Guid? MakeId, int? Page)
         {            
-            ViewBag.CurrentSort = sorting.SortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sorting.SortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sorting.SortOrder == "abrv" ? "abrv_desc" : "abrv";
-            ViewBag.SearchString = filtering.SearchString;
-            ViewBag.ManufacturerId = filtering.MakeId;
+            ViewBag.CurrentSort = SortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
+            ViewBag.AbrvSortParm = SortOrder == "abrv" ? "abrv_desc" : "abrv";
+            ViewBag.SearchString = SearchString;
+            ViewBag.ManufacturerId = MakeId;
+
+            var filtering = new Filtering() { SearchString = SearchString, MakeId = MakeId };
+            var sorting = new Sorting() { SortOrder = SortOrder };
+            var paging = new Paging();
+            if (Page != null)
+            {
+                paging.Page = (int)Page;
+            }
 
             var models = this.service.GetModels(filtering, sorting, paging);
             var transformedModels = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<VehicleModelViewModel>>(models);
@@ -76,7 +84,7 @@ namespace VehicleDatabase.MVC.Controllers
                     var result = this.service.EditModel(transformedVehicleModel);
                     if (result == 0)
                     {
-                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
+                        ModelState.AddModelError("ValidationMessage", "Unable to edit record!");
                     }
                 }
             }
@@ -102,7 +110,7 @@ namespace VehicleDatabase.MVC.Controllers
             var model = this.service.FindModelById(vehicleModelId);
             if (model == null)
             {
-                return PartialView("_ErrorModal", "Unable to save changes!");
+                return PartialView("_ErrorModal", "Unable to edit record!");
             }
             var transformedModel = Mapper.Map<IVehicleModel, VehicleModelViewModel>(model);
             transformedModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());

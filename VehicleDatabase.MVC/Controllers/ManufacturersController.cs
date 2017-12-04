@@ -21,12 +21,20 @@ namespace VehicleDatabase.MVC.Controllers
             this.service = new VehicleMakeService();
         }
 
-        public ActionResult Manufacturers(Filtering filtering, Sorting sorting, Paging paging)
+        public ActionResult Manufacturers(string SearchString, string SortOrder, int? Page)
         {
-            ViewBag.CurrentSort = sorting.SortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sorting.SortOrder) ? "name_desc" : "";
-            ViewBag.AbrvSortParm = sorting.SortOrder == "abrv" ? "abrv_desc" : "abrv";
-            ViewBag.SearchString = filtering.SearchString;
+            ViewBag.CurrentSort = SortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
+            ViewBag.AbrvSortParm = SortOrder == "abrv" ? "abrv_desc" : "abrv";
+            ViewBag.SearchString = SearchString;
+
+            var filtering = new Filtering() { SearchString = SearchString };
+            var sorting = new Sorting() { SortOrder = SortOrder };
+            var paging = new Paging();
+            if (Page != null)
+            {
+                paging.Page = (int)Page;
+            }
 
             var makes = this.service.GetMakes(filtering, sorting, paging);
             var transformedMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(makes);
@@ -67,7 +75,7 @@ namespace VehicleDatabase.MVC.Controllers
                     var result = this.service.EditMake(transformedMake);
                     if (result == 0)
                     {
-                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
+                        ModelState.AddModelError("ValidationMessage", "Unable to edit record!");
                     }
                 }
             }
@@ -104,7 +112,7 @@ namespace VehicleDatabase.MVC.Controllers
             var model = this.service.FindMakeById(manufacturerId);
             if (model == null)
             {
-                return PartialView("_ErrorModal", "Unable to save changes!");
+                return PartialView("_ErrorModal", "Unable to edit record!");
             }
 
             var transformedModel = Mapper.Map<IVehicleMake, VehicleMakeViewModel>(model);
