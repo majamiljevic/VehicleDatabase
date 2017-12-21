@@ -2,118 +2,50 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using VehicleDatabase.Service.DAL;
-using VehicleDatabase.Service.Infrastructure;
+using VehicleDatabase.Common.Infrastructure;
 using PagedList;
 using AutoMapper;
+using System.Threading.Tasks;
+using VehicleDatabase.Repository.Common;
+using VehicleDatabase.Model.Common;
+using VehicleDatabase.DAL;
+using VehicleDatabase.Service.Common;
 
 
 namespace VehicleDatabase.Service
 {
-    public class VehicleMakeService : IVehicleMakeService
+    public class VehicleMakeService : IVehicleMakeService 
     {
-        private VehicleDatabaseDBContext context;
+        private IVehicleMakeRepository Repository { get; set; }
 
-        public VehicleMakeService()
+        public VehicleMakeService(IVehicleMakeRepository repository)
         {
-            this.context = new VehicleDatabaseDBContext();
+            this.Repository = repository;
         }
 
-
-        // dodavanje proizvođača
-        public int AddMake(IVehicleMake make)
+        public Task<int> AddMakeAsync(IVehicleMake make)
         {
-            if (make.Id == null || make.Id == Guid.Empty)
-            {
-                make.Id = Guid.NewGuid();
-            }
-
-            var transformedMake = Mapper.Map<IVehicleMake, VehicleMakeEntity>(make);
-            context.Make.Add(transformedMake);
-            try
-            {
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
+            return Repository.AddMakeAsync(make);
         }
 
-        public IPagedList<IVehicleMake> GetMakes(IFiltering filtering, ISorting sorting, IPaging paging)
+        public Task<IPagedList<IVehicleMake>> GetMakesAsync(IFiltering filtering, ISorting sorting, IPaging paging)
         {
-            var makes = GetFilteredMakes(filtering);
-
-            switch (sorting.SortOrder)
-            {
-                case "name_desc":
-                    makes = makes.OrderByDescending(m => m.Name);
-                    break;
-                case "abrv":
-                    makes = makes.OrderBy(m => m.Abrv);
-                    break;
-                case "abrv_desc":
-                    makes = makes.OrderByDescending(m => m.Abrv);
-                    break;
-                default:  // Name ascending 
-                    makes = makes.OrderBy(m => m.Name);
-                    break;
-            }
-            var transformedMakes = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makes);
-            return transformedMakes.ToPagedList(paging.Page, paging.PageSize);
+            return Repository.GetMakeAsync(filtering, sorting, paging);
         }
 
-        public int GetMakesCount(IFiltering filtering)
+        public Task<int> DeleteMakeAsync(Guid manufacturerId)
         {
-            return GetFilteredMakes(filtering).Count();
+            return Repository.DeleteMakeAsync(manufacturerId);
         }
 
-        private IEnumerable<VehicleMakeEntity> GetFilteredMakes (IFiltering filtering)
+        public Task<int> EditMakeAsync(IVehicleMake make)
         {
-            IQueryable<VehicleMakeEntity> makes = context.Make;
-
-            if (!String.IsNullOrEmpty(filtering.SearchString))
-            {
-                makes = makes.Where(s => s.Name.Contains(filtering.SearchString) || s.Abrv.Contains(filtering.SearchString));
-            }
-
-            return makes;
+            return Repository.EditMakeAsync(make);
         }
-
-        public int DeleteMake(Guid manufacturerId)
+      
+        public Task<IVehicleMake> FindMakeByIdAsync(Guid manufacturerId)
         {
-            VehicleMakeEntity make = context.Make.FirstOrDefault(m => m.Id == manufacturerId);
-            var transformedMake = Mapper.Map<VehicleMakeEntity, VehicleMake>(make);
-
-            try
-            {
-                context.Make.Remove(make);
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public int EditMake(IVehicleMake make)
-        {
-            var transformedMake = Mapper.Map<IVehicleMake, VehicleMakeEntity>(make);
-            context.Entry(transformedMake).State = EntityState.Modified;
-            try
-            {
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public IVehicleMake FindMakeById(Guid manufacturerId)
-        {
-            var make = context.Make.FirstOrDefault(m => m.Id == manufacturerId);
-            return Mapper.Map<VehicleMakeEntity, VehicleMake>(make);
+            return Repository.FindByIdAsync(manufacturerId);
         }
     }
 }

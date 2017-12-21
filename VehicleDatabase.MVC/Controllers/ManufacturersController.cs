@@ -5,23 +5,25 @@ using System.Web;
 using System.Web.Mvc;
 using VehicleDatabase.MVC.Models;
 using VehicleDatabase.Service;
-using VehicleDatabase.Service.Infrastructure;
 using PagedList;
 using AutoMapper;
-
+using System.Threading.Tasks;
+using VehicleDatabase.Common.Infrastructure;
+using VehicleDatabase.Model.Common;
+using VehicleDatabase.Service.Common;
 
 namespace VehicleDatabase.MVC.Controllers
 {
     public class ManufacturersController : Controller
     {
-        private IVehicleMakeService service;
+        private IVehicleMakeService Service { get; set; }
 
-        public ManufacturersController()
+        public ManufacturersController(IVehicleMakeService service)
         {
-            this.service = new VehicleMakeService();
+            this.Service = service;
         }
 
-        public ActionResult Manufacturers(string SearchString, string SortOrder, int? Page)
+        public async Task<ActionResult> Manufacturers(string SearchString, string SortOrder, int? Page)
         {
             ViewBag.CurrentSort = SortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
@@ -35,24 +37,25 @@ namespace VehicleDatabase.MVC.Controllers
             {
                 paging.Page = (int)Page;
             }
+           
 
-            var makes = this.service.GetMakes(filtering, sorting, paging);
-            var transformedMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(makes);
+            var makes =  await this.Service.GetMakesAsync(filtering, sorting, paging);
+            var transformedMakes = Mapper.Map<IEnumerable<VehicleMakeViewModel>>(makes);
 
             return View(new StaticPagedList<VehicleMakeViewModel>(transformedMakes, makes.GetMetaData()));
         }
 
-        //dodavanje proizvođača
+        //add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddManufacturer(VehicleMakeViewModel make)
+        public async Task<ActionResult> AddManufacturer(VehicleMakeViewModel make)
         {
             if (ModelState.IsValid)
             {
-                var transformedMake = Mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
+                var transformedMake = Mapper.Map<IVehicleMake>(make);
                 if (make.Id == null || make.Id == Guid.Empty)
                 {
-                    var result = this.service.AddMake(transformedMake);
+                    var result = await this.Service.AddMakeAsync(transformedMake);
                     if (result == 0)
                     {
                         ModelState.AddModelError("ValidationMessage", "Unable to save manufacturer!");
@@ -62,35 +65,36 @@ namespace VehicleDatabase.MVC.Controllers
             return PartialView("_AddManufacturerModal", make);
         }
 
-        //editiranje proizvođača
+        //edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditManufacturer(VehicleMakeViewModel make)
+        public async Task<ActionResult> EditManufacturer(VehicleMakeViewModel make)
         {
             if (ModelState.IsValid)
             {
-                var transformedMake = Mapper.Map<VehicleMakeViewModel, VehicleMake>(make);
+                var transformedMake = Mapper.Map<IVehicleMake>(make);
                 if (make.Id != null || make.Id != Guid.Empty)
                 {
-                    var result = this.service.EditMake(transformedMake);
+                    var result = await this.Service.EditMakeAsync(transformedMake);
                     if (result == 0)
                     {
-                        ModelState.AddModelError("ValidationMessage", "Unable to edit record!");
+                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
                     }
                 }
             }
             return PartialView("_AddManufacturerModal", make);
         }
 
-        public ActionResult AddManufacturer()
+
+        public async Task<ActionResult> AddManufacturer()
         {
             return PartialView("_AddManufacturerModal");
         }
 
-        //brisanje
-        public ActionResult DeleteManufacturerConfirmed(Guid manufacturerId)
+        //delete
+        public async Task<ActionResult> DeleteManufacturerConfirmed(Guid manufacturerId)
         {
-            var result = this.service.DeleteMake(manufacturerId);
+            var result = await this.Service.DeleteMakeAsync(manufacturerId);
             if (result == 0)
             {
                 return PartialView("_ErrorModal", "Unable to delete manufacturer!");
@@ -99,7 +103,7 @@ namespace VehicleDatabase.MVC.Controllers
             return PartialView("_DeleteManufacturer");
         }
 
-        public ActionResult DeleteManufacturer(Guid manufacturerId)
+        public async Task<ActionResult> DeleteManufacturer(Guid manufacturerId)
         {
             var model = new DeleteManufacturerViewModel();
             model.Id = manufacturerId;
@@ -107,15 +111,15 @@ namespace VehicleDatabase.MVC.Controllers
         }
 
         //edit
-        public ActionResult EditManufacturer(Guid manufacturerId)
+        public async Task<ActionResult> EditManufacturer(Guid manufacturerId)
         {
-            var model = this.service.FindMakeById(manufacturerId);
+            var model = await this.Service.FindMakeByIdAsync(manufacturerId);
             if (model == null)
             {
-                return PartialView("_ErrorModal", "Unable to edit record!");
+                return PartialView("_ErrorModal", "Unable to save changes!");
             }
 
-            var transformedModel = Mapper.Map<IVehicleMake, VehicleMakeViewModel>(model);
+            var transformedModel = Mapper.Map<VehicleMakeViewModel>(model);
             return PartialView("_AddManufacturerModal", transformedModel);
         }
     }

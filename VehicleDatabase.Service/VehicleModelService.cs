@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,10 +6,14 @@ using VehicleDatabase.Service.DAL;
 using VehicleDatabase.Service.Infrastructure;
 using PagedList;
 using AutoMapper;
+using VehicleDatabase.DAL;
+using VehicleDatabase.Model;
+using VehicleDatabase.Model.Common;
+using VehicleDatabase.Common.Infrastructure;
 
 namespace VehicleDatabase.Service
 {
-    public class VehicleModelService : IVehicleModelService
+    public class VehicleModelService : IVehicleModelService1 //: IVehicleModelService
     {
         private VehicleDatabaseDBContext context;
 
@@ -67,7 +71,7 @@ namespace VehicleDatabase.Service
             return GetFilteredModels(filtering).Count();
         }
 
-        private IEnumerable<VehicleModelEntity> GetFilteredModels(IFiltering filtering)
+        private IQueryable<VehicleModelEntity> GetFilteredModels(IFiltering filtering)
         {
             IQueryable<VehicleModelEntity> models = context.Model;
 
@@ -122,4 +126,4 @@ namespace VehicleDatabase.Service
             }
         }
     }
-}
+}*/

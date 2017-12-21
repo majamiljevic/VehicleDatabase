@@ -43,8 +43,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -68,6 +68,7 @@
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -98,27 +99,37 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\VehicleDatabaseInitializer.cs" />
-    <Compile Include="Infrastructure\Filtering.cs" />
-    <Compile Include="Infrastructure\IFiltering.cs" />
-    <Compile Include="Infrastructure\IPaging.cs" />
-    <Compile Include="Infrastructure\ISorting.cs" />
-    <Compile Include="Infrastructure\Paging.cs" />
-    <Compile Include="Infrastructure\Sorting.cs" />
-    <Compile Include="IVehicleMakeService.cs" />
     <Compile Include="IVehicleModelService.cs" />
-    <Compile Include="Models\IVehicleMake.cs" />
-    <Compile Include="Models\IVehicleModel.cs" />
-    <Compile Include="Models\VehicleMake.cs" />
-    <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DAL\VehicleDatabaseDBContext.cs" />
-    <Compile Include="Entities\VehicleMakeEntity.cs" />
-    <Compile Include="Entities\VehicleModelEntity.cs" />
     <Compile Include="VehicleModelService.cs" />
     <Compile Include="VehicleMakeService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VehicleDatabase.Common\VehicleDatabase.Common.csproj">
+      <Project>{5eabeb40-587d-471d-962a-479fa63d7c71}</Project>
+      <Name>VehicleDatabase.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.DAL\VehicleDatabase.DAL.csproj">
+      <Project>{B4AE71C4-105B-4245-A730-6F88B3920F4D}</Project>
+      <Name>VehicleDatabase.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.Model.Common\VehicleDatabase.Model.Common.csproj">
+      <Project>{7452572e-c6d1-47c4-a1d7-97ae34cf5528}</Project>
+      <Name>VehicleDatabase.Model.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.Model\VehicleDatabase.Model.csproj">
+      <Project>{603BB7C4-6655-463D-BC5F-9791B71BE089}</Project>
+      <Name>VehicleDatabase.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.Repository.Common\VehicleDatabase.Repository.Common.csproj">
+      <Project>{08c737de-efbc-4ee1-9818-967422fb2cc0}</Project>
+      <Name>VehicleDatabase.Repository.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.Service.Common\VehicleDatabase.Service.Common.csproj">
+      <Project>{ED89A852-0C0B-4B2C-8A03-5670770800FA}</Project>
+      <Name>VehicleDatabase.Service.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

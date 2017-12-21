@@ -5,6 +5,9 @@ using System.Web;
 using AutoMapper;
 using VehicleDatabase.MVC.Models;
 using VehicleDatabase.Service;
+using VehicleDatabase.Model;
+using VehicleDatabase.Model.Common;
+using VehicleDatabase.DAL;
 
 namespace VehicleDatabase.MVC.App_Start
 {
@@ -12,10 +15,10 @@ namespace VehicleDatabase.MVC.App_Start
     { 
         public MappingProfile()
         {
-            CreateMap<VehicleMakeViewModel, VehicleMake>().ReverseMap();
-            CreateMap<VehicleModelViewModel, VehicleModel>().ReverseMap();
-            CreateMap<VehicleMake, VehicleMakeEntity>().ReverseMap();
-            CreateMap<VehicleModel, VehicleModelEntity>().ReverseMap();
+            CreateMap<VehicleMakeViewModel, IVehicleMake>().ReverseMap();
+            CreateMap<VehicleModelViewModel, IVehicleModel>().ReverseMap();
+            CreateMap<IVehicleMake, VehicleMakeEntity>().ReverseMap();
+            CreateMap<IVehicleModel, VehicleModelEntity>().ReverseMap();
         }
     }
 }

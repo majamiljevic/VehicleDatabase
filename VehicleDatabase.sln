@@ -7,6 +7,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.MVC", "Vehi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Service", "VehicleDatabase.Service\VehicleDatabase.Service.csproj", "{E15A7444-237A-4405-A1D6-CA2FD9A7BCE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.DAL", "VehicleDatabase.DAL\VehicleDatabase.DAL.csproj", "{B4AE71C4-105B-4245-A730-6F88B3920F4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Common", "VehicleDatabase.Common\VehicleDatabase.Common.csproj", "{5EABEB40-587D-471D-962A-479FA63D7C71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Model", "VehicleDatabase.Model\VehicleDatabase.Model.csproj", "{603BB7C4-6655-463D-BC5F-9791B71BE089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Repository.Common", "VehicleDatabase.Repository.Common\VehicleDatabase.Repository.Common.csproj", "{08C737DE-EFBC-4EE1-9818-967422FB2CC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Repository", "VehicleDatabase.Repository\VehicleDatabase.Repository.csproj", "{FD36E077-6162-464C-A2DC-6911634BEBDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Repository.Tests", "VehicleDatabase.Repository.Tests\VehicleDatabase.Repository.Tests.csproj", "{C4904C89-721C-468C-B3A2-1FD2F2A58642}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Service.Common", "VehicleDatabase.Service.Common\VehicleDatabase.Service.Common.csproj", "{ED89A852-0C0B-4B2C-8A03-5670770800FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Service.Tests", "VehicleDatabase.Service.Tests\VehicleDatabase.Service.Tests.csproj", "{2ECF9210-573A-4617-927A-68D09F38ED19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.MVC.Tests", "VehicleDatabase.MVC.Tests\VehicleDatabase.MVC.Tests.csproj", "{0C1644A9-9E06-4D93-9C2F-29E302260BE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Model.Common", "VehicleDatabase.Model.Common\VehicleDatabase.Model.Common.csproj", "{7452572E-C6D1-47C4-A1D7-97AE34CF5528}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +41,46 @@ Global
 		{E15A7444-237A-4405-A1D6-CA2FD9A7BCE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E15A7444-237A-4405-A1D6-CA2FD9A7BCE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E15A7444-237A-4405-A1D6-CA2FD9A7BCE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4AE71C4-105B-4245-A730-6F88B3920F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4AE71C4-105B-4245-A730-6F88B3920F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4AE71C4-105B-4245-A730-6F88B3920F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4AE71C4-105B-4245-A730-6F88B3920F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EABEB40-587D-471D-962A-479FA63D7C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EABEB40-587D-471D-962A-479FA63D7C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EABEB40-587D-471D-962A-479FA63D7C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EABEB40-587D-471D-962A-479FA63D7C71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603BB7C4-6655-463D-BC5F-9791B71BE089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603BB7C4-6655-463D-BC5F-9791B71BE089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603BB7C4-6655-463D-BC5F-9791B71BE089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603BB7C4-6655-463D-BC5F-9791B71BE089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C737DE-EFBC-4EE1-9818-967422FB2CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C737DE-EFBC-4EE1-9818-967422FB2CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C737DE-EFBC-4EE1-9818-967422FB2CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C737DE-EFBC-4EE1-9818-967422FB2CC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD36E077-6162-464C-A2DC-6911634BEBDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD36E077-6162-464C-A2DC-6911634BEBDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD36E077-6162-464C-A2DC-6911634BEBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD36E077-6162-464C-A2DC-6911634BEBDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4904C89-721C-468C-B3A2-1FD2F2A58642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4904C89-721C-468C-B3A2-1FD2F2A58642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4904C89-721C-468C-B3A2-1FD2F2A58642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4904C89-721C-468C-B3A2-1FD2F2A58642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED89A852-0C0B-4B2C-8A03-5670770800FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED89A852-0C0B-4B2C-8A03-5670770800FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED89A852-0C0B-4B2C-8A03-5670770800FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED89A852-0C0B-4B2C-8A03-5670770800FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ECF9210-573A-4617-927A-68D09F38ED19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ECF9210-573A-4617-927A-68D09F38ED19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ECF9210-573A-4617-927A-68D09F38ED19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ECF9210-573A-4617-927A-68D09F38ED19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C1644A9-9E06-4D93-9C2F-29E302260BE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C1644A9-9E06-4D93-9C2F-29E302260BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C1644A9-9E06-4D93-9C2F-29E302260BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C1644A9-9E06-4D93-9C2F-29E302260BE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

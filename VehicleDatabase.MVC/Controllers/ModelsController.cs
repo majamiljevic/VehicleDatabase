@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -12,7 +12,7 @@ namespace VehicleDatabase.MVC.Controllers
 {
     public class ModelsController : Controller
     {
-        private IVehicleModelService service;
+        private VehicleModelService service;
 
         public ModelsController()
         {
@@ -84,7 +84,7 @@ namespace VehicleDatabase.MVC.Controllers
                     var result = this.service.EditModel(transformedVehicleModel);
                     if (result == 0)
                     {
-                        ModelState.AddModelError("ValidationMessage", "Unable to edit record!");
+                        ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
                     }
                 }
             }
@@ -110,7 +110,7 @@ namespace VehicleDatabase.MVC.Controllers
             var model = this.service.FindModelById(vehicleModelId);
             if (model == null)
             {
-                return PartialView("_ErrorModal", "Unable to edit record!");
+                return PartialView("_ErrorModal", "Unable to save changes!");
             }
             var transformedModel = Mapper.Map<IVehicleModel, VehicleModelViewModel>(model);
             transformedModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
@@ -135,4 +135,4 @@ namespace VehicleDatabase.MVC.Controllers
             return PartialView("_DeleteVehicleModel", model);
         }
     }
-}
+}*/
