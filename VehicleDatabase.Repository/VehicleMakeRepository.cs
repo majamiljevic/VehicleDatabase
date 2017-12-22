@@ -80,9 +80,9 @@ namespace VehicleDatabase.Repository
         }
 
         //FindByIdAsync
-        public virtual async Task<IVehicleMake> FindByIdAsync(Guid id)
+        public virtual async Task<IVehicleMake> FindByIdAsync(Guid makeId)
         {
-            VehicleMakeEntity make = await Repository.GetQueryable<VehicleMakeEntity>().FirstOrDefaultAsync(m => m.Id == id);
+            VehicleMakeEntity make = await Repository.FindByIdAsync<VehicleMakeEntity>(makeId);
             return Mapper.Map<IVehicleMake>(make);
         }
     }
