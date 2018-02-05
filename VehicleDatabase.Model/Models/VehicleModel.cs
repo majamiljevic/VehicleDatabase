@@ -1,8 +1,5 @@
-﻿/*using System;
-using System.Collections.Generic;
-//using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+﻿using System;
+using VehicleDatabase.Model.Common;
 
 namespace VehicleDatabase.Model
 {
@@ -13,6 +10,6 @@ namespace VehicleDatabase.Model
         public string Abrv { get; set; }
 
         public Guid MakeId { get; set; }
-        public virtual VehicleMake Make { get; set; }
+        public virtual IVehicleMake Make { get; set; }
     }
-}*/
+}

@@ -29,7 +29,7 @@ namespace VehicleDatabase.MVC.App_Start
             bootstrapper.Initialize(CreateKernel);
         }
 
-            public static void Stop()
+        public static void Stop()
         {
             bootstrapper.ShutDown();
         }
@@ -49,10 +49,13 @@ namespace VehicleDatabase.MVC.App_Start
             kernel.Bind<IRepository>().To<VehicleDatabase.Repository.Repository>();
             kernel.Bind<IVehicleMakeRepository>().To<VehicleMakeRepository>();
             kernel.Bind<IVehicleMakeService>().To<VehicleMakeService>();
+
+            kernel.Bind<IVehicleModelRepository>().To<VehicleModelRepository>();
+            kernel.Bind<IVehicleModelService>().To<VehicleModelService>();
         }
 
 
     }
 
 
-    }
+}

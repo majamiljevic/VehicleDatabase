@@ -21,7 +21,8 @@
                 @Html.TextBox("SearchString", null, new { @class = "form-control" })
             </div>
             <div class="col-xs-2">
-                @Html.DropDownListFor(m => m.MakeId, new SelectList(Model.AllMakes, "Id", "Name", Model.MakeId), "All manufacturers", new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.MakeName, new { @class = "form-control", @data_provide = "typeahead", @autocomplete = "off" })
+                @Html.HiddenFor(Model => Model.MakeId)
             </div>
             <div class="col-xs-2">
                 <input type="submit" value="Search" class="btn btn-primary" />
@@ -44,7 +45,7 @@
             <th>Delete</th>
         </tr>
         @foreach (var item in Model.Model)
-            {
+        {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Make.Name)
@@ -77,7 +78,6 @@
 
 <div id="add-vehicle-model" class="modal fade" tabindex="-1" role="dialog">
 </div><!-- /.modal -->
-
 @*delete*@
 
 <div id="delete-vehicle-model-modal" class="modal fade" tabindex="-1" role="dialog">

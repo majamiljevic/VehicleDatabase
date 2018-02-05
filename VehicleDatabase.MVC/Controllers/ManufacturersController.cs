@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using VehicleDatabase.MVC.Models;
-using VehicleDatabase.Service;
 using PagedList;
 using AutoMapper;
 using System.Threading.Tasks;
@@ -40,9 +36,9 @@ namespace VehicleDatabase.MVC.Controllers
            
 
             var makes =  await this.Service.GetMakesAsync(filtering, sorting, paging);
-            var transformedMakes = Mapper.Map<IEnumerable<VehicleMakeViewModel>>(makes);
+            var transformedMakes = Mapper.Map<IPagedList<VehicleMakeViewModel>>(makes);
 
-            return View(new StaticPagedList<VehicleMakeViewModel>(transformedMakes, makes.GetMetaData()));
+            return View(transformedMakes);
         }
 
         //add

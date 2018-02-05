@@ -71,6 +71,7 @@
     <Compile Include="Repository.cs" />
     <Compile Include="UnitOfWork.cs" />
     <Compile Include="VehicleMakeRepository.cs" />
+    <Compile Include="VehicleModelRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VehicleDatabase.Common\VehicleDatabase.Common.csproj">

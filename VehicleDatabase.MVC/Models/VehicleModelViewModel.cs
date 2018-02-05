@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-
 
 namespace VehicleDatabase.MVC.Models
 {
@@ -11,8 +7,11 @@ namespace VehicleDatabase.MVC.Models
     {
         public Guid? Id { get; set; }
 
+        [Required(ErrorMessage = "Manufacturer is required 2")]
+        public Guid SelectedMakeId { get; set; }
+
         [Required(ErrorMessage = "Manufacturer is required")]
-        public Guid MakeId { get; set; }
+        public string SelectedMakeName { get; set; }
 
         public VehicleMakeViewModel Make { get; set; }
 
@@ -27,6 +26,6 @@ namespace VehicleDatabase.MVC.Models
         [Display(Name = "Abbreviation")]
         public string Abrv { get; set; }
 
-        public IEnumerable<VehicleMakeViewModel> AllMakes { get; set; }
+        public string Makes { get; set; }
     }
 }

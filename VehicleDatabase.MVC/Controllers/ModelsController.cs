@@ -1,27 +1,28 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using VehicleDatabase.MVC.Models;
-using VehicleDatabase.Service;
-using VehicleDatabase.Service.Infrastructure;
 using PagedList;
 using AutoMapper;
+using VehicleDatabase.Common.Infrastructure;
+using VehicleDatabase.Model.Common;
+using System.Threading.Tasks;
+using VehicleDatabase.Service.Common;
 
 namespace VehicleDatabase.MVC.Controllers
 {
     public class ModelsController : Controller
     {
-        private VehicleModelService service;
+        private IVehicleModelService Service { get; set; }
 
-        public ModelsController()
+        public ModelsController(IVehicleModelService service)
         {
-            this.service = new VehicleModelService();
+            this.Service = service;
         }
 
 
-        // GET: Models
-        public ActionResult Models(string SearchString, string SortOrder, Guid? MakeId, int? Page)
+        //get models
+        public async Task<ActionResult> Models(string SearchString, string SortOrder, string MakeName, Guid? MakeId, int? Page)
         {            
             ViewBag.CurrentSort = SortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(SortOrder) ? "name_desc" : "";
@@ -37,90 +38,80 @@ namespace VehicleDatabase.MVC.Controllers
                 paging.Page = (int)Page;
             }
 
-            var models = this.service.GetModels(filtering, sorting, paging);
-            var transformedModels = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<VehicleModelViewModel>>(models);
-
-            var pagedModel = new StaticPagedList<VehicleModelViewModel>(transformedModels, models.GetMetaData());
+            var models = await this.Service.GetModelsAsync(filtering, sorting, paging);
+            var transformedModels = Mapper.Map<IPagedList<VehicleModelViewModel>>(models);
 
             var searchModel = new SearchVehicleModelViewModel();
 
-            searchModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
-            searchModel.Model = pagedModel;
+            searchModel.Model = transformedModels;
+            searchModel.MakeName = MakeName;
 
             return View(searchModel);
         }
 
-        //dodavanje modela
+        //add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddVehicleModel(VehicleModelViewModel vehicleModel)
+        public async Task<ActionResult> AddVehicleModelAsync(VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
-                var transformedVehicleModel = Mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
+                var transformedVehicleModel = Mapper.Map<IVehicleModel>(vehicleModel);
+                
                 if (vehicleModel.Id == null || vehicleModel.Id == Guid.Empty)
                 {
-                    var result = this.service.AddModel(transformedVehicleModel);
+                    var result = await this.Service.AddModelAsync(transformedVehicleModel);
                     if (result == 0)
                     {
-                        ModelState.AddModelError("ValidationMessage", "Unable to save vehicle model!");
+                        ModelState.AddModelError("ValidationMessage", "Unable to save vehicle model! Check if manufacturer exists and try again.");
                     }
                 }
             }
-            vehicleModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", vehicleModel);
         }
 
-        //editiranje modela
+        //edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditVehicleModel(VehicleModelViewModel vehicleModel)
+        public async Task<ActionResult> EditVehicleModelAsync(VehicleModelViewModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
-                var transformedVehicleModel = Mapper.Map<VehicleModelViewModel, VehicleModel>(vehicleModel);
+                var transformedVehicleModel = Mapper.Map<IVehicleModel>(vehicleModel);
                 if (vehicleModel.Id != null || vehicleModel.Id != Guid.Empty)
                 {
-                    var result = this.service.EditModel(transformedVehicleModel);
+                    var result = await this.Service.EditModelAsync(transformedVehicleModel);
                     if (result == 0)
                     {
                         ModelState.AddModelError("ValidationMessage", "Unable to save changes!");
                     }
                 }
             }
-            vehicleModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
             return PartialView("_AddVehicleModelModal", vehicleModel);
         }
 
-        public ActionResult AddVehicleModel()
+        public async  Task<ActionResult> AddVehicleModelAsync()
         {
             var model = new VehicleModelViewModel();
-            model.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
-            var makesCount = model.AllMakes.Count();
-            if (makesCount == 0)
-            {
-                return PartialView("_ErrorModal", "Add at least one manufacturer before adding models!");
-            }
             return PartialView("_AddVehicleModelModal", model);
         }
 
         //edit
-        public ActionResult EditVehicleModel(Guid vehicleModelId)
+        public async Task<ActionResult> EditVehicleModelAsync(Guid vehicleModelId)
         {
-            var model = this.service.FindModelById(vehicleModelId);
+            var model = await this.Service.FindModelByIdAsync(vehicleModelId);
             if (model == null)
             {
                 return PartialView("_ErrorModal", "Unable to save changes!");
             }
-            var transformedModel = Mapper.Map<IVehicleModel, VehicleModelViewModel>(model);
-            transformedModel.AllMakes = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeViewModel>>(this.service.GetAllMakes());
+            var transformedModel = Mapper.Map<VehicleModelViewModel>(model);
             return PartialView("_AddVehicleModelModal", transformedModel);
         }
 
-        //brisanje
-        public ActionResult DeleteVehicleModelConfirmed(Guid vehicleModelId)
+        //delete
+        public async Task<ActionResult> DeleteVehicleModelConfirmedAsync(Guid vehicleModelId)
         {
-            var result = this.service.DeleteModel(vehicleModelId);
+            var result = await this.Service.DeleteModelAsync(vehicleModelId);
             if (result == 0)
             {
                 return PartialView("_ErrorModal", "Unable to delete vehicle model!");
@@ -128,11 +119,21 @@ namespace VehicleDatabase.MVC.Controllers
             return PartialView("_DeleteVehicleModel");
         }
 
-        public ActionResult DeleteVehicleModel(Guid vehicleModelId)
+        public async Task<ActionResult> DeleteVehicleModelAsync(Guid vehicleModelId)
         {
             var model = new DeleteVehicleModelViewModel();
             model.Id = vehicleModelId;
             return PartialView("_DeleteVehicleModel", model);
         }
+
+        //get filtered makes
+        [HttpGet]
+        public async Task<ActionResult> GetFilteredMakesAsync(string query)
+        {
+            var filtering = new Filtering() { SearchString = query };
+            var makes = await Service.GetFilteredMakesAsync(filtering);
+            var transformedMakes = Mapper.Map<IEnumerable<VehicleMakeViewModel>>(makes);
+            return Json(makes, JsonRequestBehavior.AllowGet);
+        }
     }
-}*/
+}

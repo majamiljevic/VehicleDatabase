@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using VehicleDatabase.Common.Infrastructure;
 using PagedList;
-using AutoMapper;
 using System.Threading.Tasks;
 using VehicleDatabase.Repository.Common;
 using VehicleDatabase.Model.Common;
-using VehicleDatabase.DAL;
 using VehicleDatabase.Service.Common;
 
 

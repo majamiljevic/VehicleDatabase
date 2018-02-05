@@ -99,7 +99,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IVehicleModelService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VehicleModelService.cs" />
     <Compile Include="VehicleMakeService.cs" />
@@ -124,6 +123,10 @@
     <ProjectReference Include="..\VehicleDatabase.Repository.Common\VehicleDatabase.Repository.Common.csproj">
       <Project>{08c737de-efbc-4ee1-9818-967422fb2cc0}</Project>
       <Name>VehicleDatabase.Repository.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VehicleDatabase.Repository\VehicleDatabase.Repository.csproj">
+      <Project>{FD36E077-6162-464C-A2DC-6911634BEBDD}</Project>
+      <Name>VehicleDatabase.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\VehicleDatabase.Service.Common\VehicleDatabase.Service.Common.csproj">
       <Project>{ED89A852-0C0B-4B2C-8A03-5670770800FA}</Project>

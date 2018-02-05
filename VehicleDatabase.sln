@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.MVC.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.Model.Common", "VehicleDatabase.Model.Common\VehicleDatabase.Model.Common.csproj", "{7452572E-C6D1-47C4-A1D7-97AE34CF5528}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.WebAPI", "VehicleDatabase.WebAPI\VehicleDatabase.WebAPI.csproj", "{D1D7FC44-7C37-49A5-A96D-F78E28078DAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleDatabase.SPA", "VehicleDatabase.SPA\VehicleDatabase.SPA.csproj", "{C6FA40C6-5476-4550-AF70-52CC86DA4799}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7452572E-C6D1-47C4-A1D7-97AE34CF5528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D7FC44-7C37-49A5-A96D-F78E28078DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D7FC44-7C37-49A5-A96D-F78E28078DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D7FC44-7C37-49A5-A96D-F78E28078DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D7FC44-7C37-49A5-A96D-F78E28078DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6FA40C6-5476-4550-AF70-52CC86DA4799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6FA40C6-5476-4550-AF70-52CC86DA4799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6FA40C6-5476-4550-AF70-52CC86DA4799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6FA40C6-5476-4550-AF70-52CC86DA4799}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

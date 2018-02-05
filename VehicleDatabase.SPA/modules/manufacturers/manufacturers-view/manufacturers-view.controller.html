@@ -1,0 +1,33 @@
+﻿<h2>Manufacturers</h2>
+<div>
+    <form class="form-inline" ng-submit="searchReload()">
+        <label>Search:</label>
+        <input type="text" ng-model="searchString" class="form-control" />
+        <button type="submit" class="btn btn-default ">Search</button>
+    </form>
+    <button type="button" ng-click="addManufacturerButton()" class="btn btn-primary pull-right">Add manufacturer</button>
+</div>
+<div>
+
+    <table ng-table="manufacturersTable" class="table table-striped">
+
+        <tr ng-repeat="manufacturer in manufacturers">
+            <td data-title="'Name'" sortable="'name'">
+                {{manufacturer.name}}
+            </td>
+            <td data-title="'Abbreviation'" sortable="'abrv'">
+                {{manufacturer.abrv}}
+            </td>
+            <td data-title="'Edit'">
+                <button type="button" ng-click="editManufacturer(manufacturer)" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </td>
+            <td data-title="'Delete'">
+                <button type="button" ng-click="deleteManufacturerModal(manufacturer)" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>

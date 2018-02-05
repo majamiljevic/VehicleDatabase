@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Data.Entity.Infrastructure;
 using VehicleDatabase.DAL;
 using VehicleDatabase.Repository.Common;
 
@@ -23,79 +21,45 @@ namespace VehicleDatabase.Repository
             DbContext = dbContext;
         }
 
-        public virtual async Task<List<T>> GetAsync<T>(T entity) where T : class
+        public async Task<List<T>> GetAsync<T>(T entity) where T : class
         {
             return await DbContext.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<int> AddAsync<T>(T entity) where T : class
+        public async Task<int> AddAsync<T>(T entity) where T : class
         {
-            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
-            if (dbEntityEntry.State != EntityState.Detached)
+            using (var uow = new UnitOfWork(DbContext))
             {
-                dbEntityEntry.State = EntityState.Added;
-            }
-            else
-            {
-                DbContext.Set<T>().Add(entity);
-            }
-            try
-            {
-                return await DbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return 0;
+                await uow.AddAsync(entity);
+                return await uow.CommitAsync();
             }
         }
 
-        public virtual async Task<int> EditAsync<T>(T entity) where T : class
+        public async Task<int> EditAsync<T>(T entity) where T : class
         {
-            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
-            if (dbEntityEntry.State == EntityState.Detached)
+            using (var uow = new UnitOfWork(DbContext))
             {
-                DbContext.Set<T>().Attach(entity);
-            }
-            dbEntityEntry.State = EntityState.Modified;
-            try
-            {
-                return await DbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return 0;
+                await uow.UpdateAsync(entity);
+                return await uow.CommitAsync();
             }
         }
 
-        public virtual Task<T> FindByIdAsync<T>(Guid Id) where T : class
+        public Task<T> FindByIdAsync<T>(Guid Id) where T : class
         {
             return DbContext.Set<T>().FindAsync(Id);
         }
 
-        public virtual async Task<int> DeleteAsync<T>(T entity) where T : class
+        public async Task<int> DeleteAsync<T>(T entity) where T : class
         {
-            DbEntityEntry dbEntityEntry = DbContext.Entry(entity);
-            if (dbEntityEntry.State != EntityState.Deleted)
+            using (var uow = new UnitOfWork(DbContext))
             {
-                dbEntityEntry.State = EntityState.Deleted;
-            }
-            else
-            {
-                DbContext.Set<T>().Attach(entity);
-                DbContext.Set<T>().Remove(entity);
-            }
-            try
-            {
-                return await DbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return 0;
+                await uow.DeleteAsync(entity);
+                return await uow.CommitAsync();
             }
         }
 
 
-        public virtual async Task<int> DeleteAsync<T>(Guid Id) where T : class
+        public async Task<int> DeleteAsync<T>(Guid Id) where T : class
         {
             var entity = await FindByIdAsync<T>(Id);
             if (entity == null)
@@ -105,7 +69,7 @@ namespace VehicleDatabase.Repository
             return await DeleteAsync<T>(entity);
         }
 
-        public virtual IQueryable<T> GetQueryable<T>() where T : class
+        public IQueryable<T> GetQueryable<T>() where T : class
         {
             return DbContext.Set<T>();
         }

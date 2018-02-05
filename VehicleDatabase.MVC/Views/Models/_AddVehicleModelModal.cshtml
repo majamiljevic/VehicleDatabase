@@ -2,7 +2,7 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         @{ var editing = Model != null && Model.Id != null && Model.Id != Guid.Empty; }
-            @using (Ajax.BeginForm(editing ? "EditVehicleModel" : "AddVehicleModel", "Models", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "add-vehicle-model", OnSuccess = "jqEditFormCompleted" }))
+            @using (Ajax.BeginForm(editing ? "EditVehicleModelAsync" : "AddVehicleModelAsync", "Models", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "add-vehicle-model", OnSuccess = "jqEditFormCompleted" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
@@ -12,7 +12,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Manufacturer</label>
-                        @Html.DropDownListFor(m => m.MakeId, new SelectList(Model.AllMakes, "Id", "Name"), "Select manufacturer", new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.SelectedMakeName, new { @class = "form-control", @data_provide = "typeahead", @autocomplete = "off" })
+                        @Html.HiddenFor(Model => Model.SelectedMakeId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Name)
@@ -41,5 +42,7 @@
         if ($("#form-state").val() == "true") {
             window.location.href = "@Url.Action("Models", "Models")";
         }
+        $('#SelectedMakeName').typeahead('destroy');
+        modalAutocomplete();
     }
 </script>

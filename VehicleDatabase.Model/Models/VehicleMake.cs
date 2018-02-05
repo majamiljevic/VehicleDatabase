@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 using VehicleDatabase.Model.Common;
-
 
 namespace VehicleDatabase.Model
 {
@@ -14,7 +10,6 @@ namespace VehicleDatabase.Model
         public string Name { get; set; }
         public string Abrv { get; set; }
 
-       // public virtual IEnumerable<VehicleModel> Model { get; set; }
-
+        public virtual IEnumerable<IVehicleModel> Model { get; set; }
     }
 }

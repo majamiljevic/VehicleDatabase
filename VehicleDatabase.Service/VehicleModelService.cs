@@ -1,129 +1,57 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using VehicleDatabase.Service.DAL;
-using VehicleDatabase.Service.Infrastructure;
 using PagedList;
-using AutoMapper;
-using VehicleDatabase.DAL;
-using VehicleDatabase.Model;
 using VehicleDatabase.Model.Common;
 using VehicleDatabase.Common.Infrastructure;
+using System.Threading.Tasks;
+using VehicleDatabase.Repository.Common;
+using VehicleDatabase.Service.Common;
 
 namespace VehicleDatabase.Service
 {
-    public class VehicleModelService : IVehicleModelService1 //: IVehicleModelService
+    public class VehicleModelService : IVehicleModelService
     {
-        private VehicleDatabaseDBContext context;
+        private IVehicleModelRepository Repository { get; set; }
 
-        public VehicleModelService()
+        public VehicleModelService(IVehicleModelRepository repository)
         {
-            this.context = new VehicleDatabaseDBContext();
+            this.Repository = repository;
         }
 
-        public int AddModel(IVehicleModel model)
+        //getmodels
+        public Task<IPagedList<IVehicleModel>> GetModelsAsync(IFiltering filtering, ISorting sorting, IPaging paging)
         {
-            var transformedModel = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);            
-            context.Model.Add(transformedModel);
-            try
-            {
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
+            return Repository.GetModelAsync(filtering, sorting, paging);
         }
 
-        public IEnumerable<IVehicleMake> GetAllMakes()
+        //add
+        public Task<int> AddModelAsync(IVehicleModel model)
         {
-            var allMakes = context.Make.OrderBy(m => m.Name).ToList();
-            return Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(allMakes);
+            return Repository.AddModelAsync(model);
         }
 
-        //dohvaćanje modela
-        public IPagedList<VehicleModel> GetModels(IFiltering filtering, ISorting sorting, IPaging paging)
+        //edit
+        public Task<int> EditModelAsync(IVehicleModel model)
         {
-            var models = GetFilteredModels(filtering);
-
-            switch (sorting.SortOrder)
-            {
-                case "name_desc":
-                    models = models.OrderByDescending(m => m.Name);                    
-                    break;
-                case "abrv":
-                    models = models.OrderBy(m => m.Abrv);
-                    break;
-                case "abrv_desc":
-                    models = models.OrderByDescending(m => m.Abrv);
-                    break;
-                default:  // Name ascending 
-                    models = models.OrderBy(m => m.Name);
-                    break;
-            }
-            var transformedModels = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<VehicleModel>>(models.ToList());
-            return transformedModels.ToPagedList(paging.Page, paging.PageSize);
+            return Repository.EditModelAsync(model);
         }
 
-        public int GetModelsCount(IFiltering filtering)
-        {            
-            return GetFilteredModels(filtering).Count();
-        }
-
-        private IQueryable<VehicleModelEntity> GetFilteredModels(IFiltering filtering)
+        //find by id
+        public Task<IVehicleModel> FindModelByIdAsync(Guid vehicleModelId)
         {
-            IQueryable<VehicleModelEntity> models = context.Model;
-
-            if (filtering.MakeId != null && filtering.MakeId != Guid.Empty)
-            {
-                models = models.Where(m => m.MakeId == filtering.MakeId);
-            }
-
-            if (!String.IsNullOrEmpty(filtering.SearchString))
-            {
-                models = models.Where(s => s.Name.Contains(filtering.SearchString) || s.Abrv.Contains(filtering.SearchString));
-            }
-
-            return models;
-        }
-
-        //update
-        public int EditModel(IVehicleModel model)
-        {
-            var transformedModel = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
-            context.Entry(transformedModel).State = EntityState.Modified;
-            try
-            {
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        public IVehicleModel FindModelById(Guid vehicleModelId)
-        {
-            var model = context.Model.FirstOrDefault(m => m.Id == vehicleModelId);
-            return Mapper.Map<VehicleModelEntity, VehicleModel>(model);
+            return Repository.FindByIdAsync(vehicleModelId);
         }
 
         //delete
-        public int DeleteModel(Guid vehicleModelId)
+        public Task<int> DeleteModelAsync(Guid vehicleModelId)
         {
-            VehicleModelEntity model = context.Model.FirstOrDefault(m => m.Id == vehicleModelId);
-            var transformedModel = Mapper.Map<VehicleModelEntity, VehicleModel>(model);
+            return Repository.DeleteModelAsync(vehicleModelId);
+        }
 
-            try
-            {
-                context.Model.Remove(model);
-                return context.SaveChanges();
-            }
-            catch
-            {
-                return 0;
-            }
+        //get filtered makes
+        public Task<IEnumerable<IVehicleMake>> GetFilteredMakesAsync(IFiltering filtering)
+        {
+            return Repository.GetFilteredMakesAsync(filtering);
         }
     }
-}*/
+}

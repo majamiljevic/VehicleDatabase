@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="IRepository.cs" />
     <Compile Include="IVehicleMakeRepository.cs" />
+    <Compile Include="IVehicleModelRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
