@@ -10,6 +10,7 @@ namespace VehicleDatabase.Repository.Common
         Task<int> AddAsync<T>(T entity) where T : class;
         Task<int> DeleteAsync<T>(T entity) where T : class;
         Task<int> DeleteAsync<T>(Guid Id) where T : class;
+        Task<int> DeleteBatchAsync<T>(Guid[] ids) where T : class;
         Task<int> EditAsync<T>(T entity) where T : class;
         Task<T> FindByIdAsync<T>(Guid Id) where T : class;
         Task<List<T>> GetAsync<T>(T entity) where T : class;

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using PagedList;
 using VehicleDatabase.Common.Infrastructure;
 using VehicleDatabase.Model.Common;
-using System.Collections.Generic;
 
 namespace VehicleDatabase.Service.Common
 {
@@ -11,6 +11,7 @@ namespace VehicleDatabase.Service.Common
     {
         Task<int> AddModelAsync(IVehicleModel model);
         Task<int> DeleteModelAsync(Guid vehicleModelId);
+        Task<int> DeleteMultipleRecordsAsync(Guid[] ids);
         Task<int> EditModelAsync(IVehicleModel model);
         Task<IVehicleModel> FindModelByIdAsync(Guid vehicleModelId);
         Task<IEnumerable<IVehicleMake>> GetFilteredMakesAsync(IFiltering filtering);

@@ -9,6 +9,7 @@ using PagedList;
 using VehicleDatabase.WebAPI.Models;
 using VehicleDatabase.Service.Common;
 using VehicleDatabase.Model.Common;
+using System.Collections.Generic;
 
 namespace VehicleDatabase.WebAPI.Controllers
 {
@@ -37,7 +38,14 @@ namespace VehicleDatabase.WebAPI.Controllers
             var models = await this.Service.GetModelsAsync(filtering, sorting, paging);
             var transformedModels = Mapper.Map<IPagedList<VehicleModelModel>>(models);
 
-            return Request.CreateResponse(HttpStatusCode.OK, transformedModels);
+            var pagingModel = new VehicleModelPagingModel();
+
+            pagingModel.Page = transformedModels.PageNumber;
+            pagingModel.PageCount = transformedModels.PageCount;
+            pagingModel.TotalCount = transformedModels.TotalItemCount;
+            pagingModel.Models = transformedModels;
+          
+            return Request.CreateResponse(HttpStatusCode.OK, pagingModel);
         }
 
         [HttpPost]
@@ -79,6 +87,32 @@ namespace VehicleDatabase.WebAPI.Controllers
         public async Task<HttpResponseMessage> DeleteAsync([FromUri]Guid id)
         {
             var result = await this.Service.DeleteModelAsync(id);
+            if (result == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<HttpResponseMessage> FindModelByIdAsync([FromUri]Guid id)
+        {
+            var model = await this.Service.FindModelByIdAsync(id);
+            if (model == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+            var transformedModel = Mapper.Map<VehicleModelModel>(model);
+            return Request.CreateResponse(HttpStatusCode.OK, transformedModel);
+        }
+
+        [HttpDelete]
+        [Route("batch")]
+        public async Task<HttpResponseMessage> DeleteMultipleRecordsAsync([FromBody]Guid[] ids)
+        {
+            var result = await this.Service.DeleteMultipleRecordsAsync(ids);
             if (result == 0)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);

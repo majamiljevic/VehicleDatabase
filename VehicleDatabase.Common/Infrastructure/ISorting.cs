@@ -1,5 +1,4 @@
-﻿
-namespace VehicleDatabase.Common.Infrastructure
+﻿namespace VehicleDatabase.Common.Infrastructure
 {
     public interface ISorting
     {

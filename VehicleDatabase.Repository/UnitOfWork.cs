@@ -4,12 +4,13 @@ using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using VehicleDatabase.DAL;
 using System.Transactions;
+using VehicleDatabase.Repository.Common;
 
 namespace VehicleDatabase.Repository
 {
-    class UnitOfWork : IDisposable
+    public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        protected VehicleDatabaseDBContext DbContext { get; private set; }
+        private VehicleDatabaseDBContext DbContext { get; set; }
 
         public UnitOfWork(VehicleDatabaseDBContext dbContext)
         {
@@ -79,7 +80,6 @@ namespace VehicleDatabase.Repository
             {
                 throw e;
             }
-
         }
 
         public virtual Task<int> DeleteAsync<T>(Guid Id) where T : class

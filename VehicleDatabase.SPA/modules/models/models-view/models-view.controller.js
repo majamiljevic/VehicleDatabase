@@ -1,31 +1,33 @@
 ﻿(function (angular) {
     'use strict';
     angular.module('app')
-        .controller('manufacturersController', ['$scope', '$location', '$uibModal', 'manufacturersService',
-            function ($scope, $location, $uibModal, manufacturersService) {
+        .controller('modelsController', ['$scope', '$location', '$uibModal', 'modelsService',
+            function ($scope, $location, $uibModal, modelsService) {
 
-                $scope.manufacturers = [];
+                $scope.models = [];
                 $scope.searchString = "";
-                $scope.selectedManufacturersIds = [];
+                $scope.selectedModelsIds = [];
+                $scope.selectAll = false;
                 $scope.reverseSort = false;
                 $scope.page = 1;
                 $scope.sortOrder = "name";
-                $scope.selectAll = false;
 
                 //get data
                 $scope.getData = function () {
-                    $scope.selectedManufacturersIds = [];
+                    $scope.selectedModelsIds = [];
                     $scope.selectAll = false;
                     var sortOrder = $scope.sortOrder;
-                    return manufacturersService.get($scope.page, $scope.searchString, sortOrder).then(function (response) {
+                    var makeId = $scope.manufacturer ? $scope.manufacturer.id : undefined;
+
+                    return modelsService.get($scope.page, $scope.searchString, sortOrder, makeId).then(function (response) {
                         $scope.totalItemsCount = response.data.totalCount;
-                        $scope.manufacturers = response.data.makes;
+                        $scope.models = response.data.models;
                     })
                 };
 
                 $scope.getData();
 
-                //search
+                //search  
                 $scope.searchReload = function () {
                     $scope.page = 1;
                     $scope.getData();
@@ -46,55 +48,55 @@
                 };
 
                 //add
-                function goToAddManufacturer() {
-                    $location.path('add-manufacturer');
+                function goToAddModel() {
+                    $location.path('add-model');
                 };
 
-                $scope.addManufacturerButton = goToAddManufacturer;
+                $scope.addModelButton = goToAddModel;
 
                 //edit
-                function goToEditManufacturer(manufacturer) {
-                    $location.path('edit-manufacturer/' + manufacturer.id);
+                function goToEditModel(model) {
+                    $location.path('edit-model/' + model.id);
                 };
 
-                $scope.editManufacturer = goToEditManufacturer;
+                $scope.editModel = goToEditModel;
 
-                //delete modal
-                $scope.deleteManufacturerModal = function (manufacturer) {
+                //delete
+                $scope.deleteModelModal = function (model) {
                     $scope.modalInstance = $uibModal.open({
                         ariaLabelledBy: 'modal-title',
                         ariaDescribedBy: 'modal-body',
                         templateUrl: 'modules/common/components/delete/delete.controller.html',
                         controller: 'deleteController',
                         resolve: {
-                            record: function () { return manufacturer; }
+                            record: function () { return model; }
                         }
                     });
                     $scope.modalInstance.result.then(function (selectedItem) {
-                        manufacturersService.delete(selectedItem.id).then(function () {
+                        modelsService.delete(selectedItem.id).then(function () {
                             $scope.getData();
                         });
                     }, function () { console.log("canceled") });
                 };
 
                 //show delete button
-                $scope.manufacturerChecked = function (manufacturer) {
-                    $scope.selectedManufacturersIds = [];
-                    angular.forEach($scope.manufacturers, function (manufacturer) {
-                        if (manufacturer.checked) {
-                            $scope.selectedManufacturersIds.push(manufacturer.id)
+                $scope.modelChecked = function (model) {
+                    $scope.selectedModelsIds = [];
+                    angular.forEach($scope.models, function (model) {
+                        if (model.checked) {
+                            $scope.selectedModelsIds.push(model.id)
                         }
                     })
-                    $scope.selectAll = $scope.selectedManufacturersIds.length === $scope.manufacturers.length;
+                    $scope.selectAll = $scope.selectedModelsIds.length === $scope.models.length;
                 };
 
                 //select all
                 $scope.checkAll = function () {
-                    $scope.selectedManufacturersIds = [];
-                    angular.forEach($scope.manufacturers, function (manufacturer) {
-                        manufacturer.checked = $scope.selectAll;
+                    $scope.selectedModelsIds = [];
+                    angular.forEach($scope.models, function (model) {
+                        model.checked = $scope.selectAll;
                         if ($scope.selectAll) {
-                            $scope.selectedManufacturersIds.push(manufacturer.id)
+                            $scope.selectedModelsIds.push(model.id)
                         }
                     })
                 };
@@ -107,12 +109,13 @@
                         templateUrl: 'modules/common/components/delete/delete.controller.html',
                         controller: 'deleteController',
                         resolve: {
-                            record: function () { return $scope.selectedManufacturersIds; }
+                            record: function () { return $scope.selectedModelsIds; }
                         }
                     });
                     $scope.modalInstanceBatch.result.then(function (selectedItems) {
-                        manufacturersService.deleteBatch(selectedItems).then(function () {
+                        modelsService.deleteBatch(selectedItems).then(function () {
                             $scope.getData();
+                            $scope.modelSelected();
                         })
                     }, function () { console.log("canceled") });
                 };

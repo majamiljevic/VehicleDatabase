@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using PagedList;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using VehicleDatabase.DAL;
 using VehicleDatabase.Model.Common;
 using VehicleDatabase.WebAPI.Models;

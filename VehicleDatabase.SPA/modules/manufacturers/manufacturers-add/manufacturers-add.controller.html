@@ -1,14 +1,17 @@
 ﻿<div>
     <h4>{{ isEdit ? "Edit Manufacturer" : "Add manufacturer" }}</h4>
-    <form name="addManufacturerForm" ng-submit="saveChanges()">
+    <form name="addManufacturerForm" ng-submit="saveChanges()" novalidate>
         <div class="form-group">
             <label>Name</label>
-            <input type="text" ng-model="manufacturer.name" class="form-control" >
+            <input type="text" name="name" ng-model="manufacturer.name" class="form-control" required>
+            <span class="help-inline" ng-show="submitted && addManufacturerForm.name.$error.required">Required</span>
         </div>
         <div class="form-group">
             <label>Abrv</label>
-            <input type="text" ng-model="manufacturer.abrv" class="form-control" >
+            <input type="text" name="abrv" ng-model="manufacturer.abrv" class="form-control" required>
+            <span class="help-inline" ng-show="submitted && addManufacturerForm.abrv.$error.required">Required</span>
         </div>
-        <button type="submit" class="btn btn-default">Save</button>
+        <button type="submit" class="btn btn-default" ng-click="submitted=true">Save</button>
     </form>
 </div>
+

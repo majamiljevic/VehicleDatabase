@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using VehicleDatabase.Common.Infrastructure;
-using VehicleDatabase.Model;
-using VehicleDatabase.Model.Common;
 using PagedList;
-using VehicleDatabase.DAL;
+using VehicleDatabase.Common.Infrastructure;
+using VehicleDatabase.Model.Common;
 
 namespace VehicleDatabase.Repository.Common
 {
@@ -13,8 +10,9 @@ namespace VehicleDatabase.Repository.Common
     {
         Task<int> AddMakeAsync(IVehicleMake make);
         Task<int> DeleteMakeAsync(Guid makeId);
+        Task<int> DeleteMultipleRecordsAsync(Guid[] ids);
         Task<int> EditMakeAsync(IVehicleMake make);
+        Task<IVehicleMake> FindByIdAsync(Guid makeId);
         Task<IPagedList<IVehicleMake>> GetMakeAsync(IFiltering filtering, ISorting sorting, IPaging paging);
-        Task<IVehicleMake> FindByIdAsync(Guid id);
     }
 }

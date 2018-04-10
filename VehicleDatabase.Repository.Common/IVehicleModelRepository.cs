@@ -11,6 +11,7 @@ namespace VehicleDatabase.Repository.Common
     {
         Task<int> AddModelAsync(IVehicleModel model);
         Task<int> DeleteModelAsync(Guid modelId);
+        Task<int> DeleteMultipleRecordsAsync(Guid[] ids);
         Task<int> EditModelAsync(IVehicleModel model);
         Task<IVehicleModel> FindByIdAsync(Guid modelId);
         Task<IEnumerable<IVehicleMake>> GetFilteredMakesAsync(IFiltering filtering);

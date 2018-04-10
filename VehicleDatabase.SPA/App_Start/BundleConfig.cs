@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace VehicleDatabase.SPA
 {
@@ -24,10 +21,18 @@ namespace VehicleDatabase.SPA
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/modules/app.module.js",
                 "~/modules/app.config.js",
+
+                "~/modules/common/components/delete/delete.controller.js",
+                "~/modules/common/directives/manufacturers-dropdown/manufacturers-dropdown.directive.js",
+
                 "~/modules/manufacturers/services/manufacturers.service.js",
                 "~/modules/manufacturers/manufacturers-view/manufacturers-view.controller.js",
                 "~/modules/manufacturers/manufacturers-delete/manufacturers-delete.controller.js",
-                "~/modules/manufacturers/manufacturers-add/manufacturers-add.controller.js")
+                "~/modules/manufacturers/manufacturers-add/manufacturers-add.controller.js",
+
+                 "~/modules/models/services/models.service.js",
+                 "~/modules/models/models-view/models-view.controller.js",
+                 "~/modules/models/models-add/models-add.controller.js")
                 );
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
@@ -11,6 +9,8 @@ using VehicleDatabase.Repository.Common;
 using VehicleDatabase.Service;
 using VehicleDatabase.Service.Common;
 using VehicleDatabase.WebAPI.App_Start;
+using VehicleDatabase.DAL;
+using System.Data.Entity;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
@@ -45,7 +45,10 @@ namespace VehicleDatabase.WebAPI.App_Start
 
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<VehicleDatabaseDBContext>().To<VehicleDatabaseDBContext>().InRequestScope();
             kernel.Bind<IRepository>().To<VehicleDatabase.Repository.Repository>();
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<IUnitOfWorkFactory>().To<UnitOfWorkFactory>();
 
             kernel.Bind<IVehicleMakeRepository>().To<VehicleMakeRepository>();
             kernel.Bind<IVehicleMakeService>().To<VehicleMakeService>();

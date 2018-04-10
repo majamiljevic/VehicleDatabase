@@ -1,0 +1,23 @@
+﻿<div>
+    <h4>{{ isEdit ? "Edit model" : "Add model" }}</h4>
+    <form name="addModelForm" ng-submit="saveChanges()" novalidate>
+        <label>Manufacturer</label>
+        <div class="form-group">
+            <manufacturers-dropdown manufacturer="manufacturer"></manufacturers-dropdown>
+            <div>
+                <span class="help-inline" ng-show="submitted && addModelForm.manufacturer.$error.required">Required</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" ng-model="model.name" class="form-control" required>
+            <span class="help-inline" ng-show="submitted && addModelForm.name.$error.required">Required</span>
+        </div>
+        <div class="form-group">
+            <label>Abrv</label>
+            <input type="text" name="abrv" ng-model="model.abrv" class="form-control" required>
+            <span class="help-inline" ng-show="submitted && addModelForm.abrv.$error.required">Required</span>
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="submitted=true">Save</button>
+    </form>
+</div>

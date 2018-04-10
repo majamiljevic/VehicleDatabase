@@ -15,18 +15,19 @@
 
                 //save
                 $scope.saveChanges = function () {
-                    if ($scope.isEdit) {
-                        manufacturersService.put($scope.manufacturer.id, $scope.manufacturer).then(function (data) {
-                            $location.path('/');
-                        });
+                    if ($scope.addManufacturerForm.$valid) {
+                        if ($scope.isEdit) {
+                            manufacturersService.put($scope.manufacturer.id, $scope.manufacturer).then(function (data) {
+                                $location.path('/');
+                            });
+                        }
+                        else {
+                            manufacturersService.post($scope.manufacturer).then(function (data) {
+                                $location.path('/');
+                            });
+                        }
                     }
-                    else {
-                        manufacturersService.post($scope.manufacturer).then(function (data) {
-                            $location.path('/');
-                        });
-                    }                    
                 };
-
             }]);
 })(angular);
 

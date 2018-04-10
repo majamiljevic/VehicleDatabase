@@ -184,6 +184,7 @@
     <Compile Include="Models\VehicleMakeModel.cs" />
     <Compile Include="Models\VehicleMakePagingModel.cs" />
     <Compile Include="Models\VehicleModelModel.cs" />
+    <Compile Include="Models\VehicleModelPagingModel.cs" />
     <Compile Include="Models\VehicleModelUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

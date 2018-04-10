@@ -1,13 +1,13 @@
 ﻿(function (angular) {
     'use strict';
     angular.module('app')
-        .service('manufacturersService', ['$http',
+        .service('modelsService', ['$http',
             function ($http) {
-                var baseUrl = 'http://vehicle.local/api/manufacturers/';
+                var baseUrl = 'http://vehicle.local/api/models/';
 
                 //get
-                this.get = function get(page, searchString, sortOrder) {
-                    return $http.get(baseUrl + '?page=' + page + '&searchString=' + searchString + '&sortOrder=' + sortOrder);
+                this.get = function get(page, searchString, sortOrder, makeId) {
+                    return $http.get(baseUrl + '?page=' + page + '&searchString=' + searchString + '&sortOrder=' + sortOrder + '&makeId=' + makeId);
                 };
 
                 //add
@@ -31,7 +31,7 @@
                 };
 
                 //delete
-                this.delete = function deleteManufacturer(id) {
+                this.delete = function deleteModel(id) {
                     return $http.delete(baseUrl + id);
                 };
 

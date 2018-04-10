@@ -53,5 +53,11 @@ namespace VehicleDatabase.Service
         {
             return Repository.GetFilteredMakesAsync(filtering);
         }
+
+        //delete multiple records
+        public Task<int> DeleteMultipleRecordsAsync(Guid[] ids)
+        {
+            return Repository.DeleteMultipleRecordsAsync(ids);
+        }
     }
 }

@@ -97,5 +97,11 @@ namespace VehicleDatabase.Repository
 
             return Mapper.Map<IEnumerable<IVehicleMake>>(makes.ToList());
         }
+
+        //delete multiple records
+        public Task<int> DeleteMultipleRecordsAsync(Guid[] ids)
+        {
+            return Repository.DeleteBatchAsync<VehicleModelEntity>(ids);
+        }
     }
 }

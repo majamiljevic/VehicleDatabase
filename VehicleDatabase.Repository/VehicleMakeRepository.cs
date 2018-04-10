@@ -78,5 +78,11 @@ namespace VehicleDatabase.Repository
             VehicleMakeEntity make = await Repository.FindByIdAsync<VehicleMakeEntity>(makeId);
             return Mapper.Map<IVehicleMake>(make);
         }
+
+        //delete multiple records
+        public Task<int> DeleteMultipleRecordsAsync(Guid[] ids)
+        {
+            return Repository.DeleteBatchAsync<VehicleMakeEntity>(ids);
+        }
     }
 }

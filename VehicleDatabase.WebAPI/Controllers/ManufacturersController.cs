@@ -44,7 +44,6 @@ namespace VehicleDatabase.WebAPI.Controllers
             pagingModel.TotalCount = transformedMakes.TotalItemCount;
             pagingModel.Makes = transformedMakes;
 
-
             return Request.CreateResponse(HttpStatusCode.OK, pagingModel);
         }
 
@@ -82,7 +81,6 @@ namespace VehicleDatabase.WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, make);
         }
 
-
         [HttpDelete]
         [Route("{id}")]
         public async Task<HttpResponseMessage> DeleteAsync([FromUri]Guid id)
@@ -96,7 +94,6 @@ namespace VehicleDatabase.WebAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-
         [HttpGet]
         [Route("{id}")]
         public async Task<HttpResponseMessage> FindMakeByIdAsync([FromUri]Guid id)
@@ -108,7 +105,19 @@ namespace VehicleDatabase.WebAPI.Controllers
             }
             var transformedMake = Mapper.Map<VehicleMakeModel>(make);
             return Request.CreateResponse(HttpStatusCode.OK, transformedMake);
+        }
 
+        [HttpDelete]
+        [Route("batch")]
+        public async Task<HttpResponseMessage> DeleteMultipleRecordsAsync([FromBody]Guid[] ids)
+        {
+            var result = await this.Service.DeleteMultipleRecordsAsync(ids);
+            if (result == 0)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
